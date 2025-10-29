@@ -1,8 +1,8 @@
 <template lang="pug">
-article.content.p-2.w-10x12.mt-4
-  //- prismic-rich-text(:field="homepageData.data.homepage_content").text-lg.md_text-xl
+article.content.p-2.w-10x12.mt-4 
+  
 .fixed.bottom-0.z-10
-  Gallery(:gallery="homepageData.data.gallery" :featured-image="homepageData.data.featuredImage" :grid="homepageData.data.show_as_grid" :autoscroll="homepageData.data.enable_autoscroll" :aspectRatio="'3/4'")
+  //- Gallery(:gallery="homepageData.data.gallery" :featured-image="homepageData.data.featuredImage" :grid="homepageData.data.show_as_grid" :autoscroll="homepageData.data.enable_autoscroll" :aspectRatio="'3/4'")
   //- Slider(:gallery="homepageData.data.gallery" :items_to_show="3.5")
 </template>
 

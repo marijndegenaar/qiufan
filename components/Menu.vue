@@ -1,24 +1,23 @@
 <template lang="pug">
 #menu-wrap
-  #mobile_menu.right-1.fixed.text-sm(v-if="isMobileMenuVisible" @click="toggleMenu") 🍔
-  #menu.text-right.md_text-left.fixed.md_relative.right-1(v-if="!isMobileMenuVisible" @click="toggleMenu")
+  #mobile_menu.right-1.fixed.text-sm(v-if="isMobileMenuVisible" @click="toggleMenu") ++
+  #menu(v-if="!isMobileMenuVisible" @click="toggleMenu")
     .menu-items.flex-col.flex.md_block
-      nuxt-link.md_mr-8.mb-2(
+      nuxt-link(
         v-for="item in menu" 
         :key="item.slug" 
         :to="item.slug"
         @mouseenter="$emit('menuHover', item.slug)"
         @mouseleave="$emit('menuHover', '')"
       ) 
-        span {{ item.name }}
+        span {{ item.name }}, 
 </template>
 <script setup>
 import autoAnimate from "@formkit/auto-animate";
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
-const menu = [
-{ name: "GFX Feed", slug: "/graphicdesign" },  
-{ name: "Projects", slug: "/projects" },
+const menu = [ 
+{ name: "Work", slug: "/projects" },
   // { name: "Exhibitions", slug: "/exhibitions" },
   { name: "About", slug: "/about" },
   

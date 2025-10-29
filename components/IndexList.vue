@@ -1,6 +1,6 @@
 <template lang="pug">
   //- #filter.text-xs.fixed.w-full.left-1.top-8.z-10.flex
-  #filter.text-xs.w-11x12.md_w-full.flex.pl-2.md_mt-8.sticky.top-8
+  #filter.w-full.p-2.fixed.top-48.w-1x3
     //- .spacer.w-2x5
     //- span.pr-2 🗄️ 
     span.mr-2.hidden.md_block Filter:
@@ -11,24 +11,29 @@
       :class="{ 'active': item.slug === currentFilter }"
     )
       span {{ item.name }}
+    .filter-clear.cursor-pointer.pr-3.md_pr-4.ml-auto(v-if="currentFilter" @click="clearFilter")
+      span Clear
   
   //- pre {{ filteredItems }}
 
-  #content-list.w-full.px-2.mb-32.mt-8
-    .content-item.w-full.mb-8(v-for="item in filteredItems" :key="item.id")
-      nuxt-link(:to="`/${contentType}/${item.uid}`")
-        h2.text-xl.flex.items-baseline 
-          .title.mr-2.tracking-tighter {{ item.data.title[0]?.text }}
-          .year.text-sm.md_text-lg.md_text-normal {{ item.data.year }}
-        .type.md_text-xs {{ item.data.category }}
-        //- NuxtImg.md_hidden.feat.w-2x5.mt-2.aspect-video.object-cover(v-if="item.data.featured_image.url" :src="item.data.featured_image.url" )
-  
-      .featured-image.hidden.w-1x2.md_w-2x6.md_fixed.right-0.bottom-0
-        NuxtImg.w-full(
+  #project-list.flex.p-2
+    .w-1x3.spacer 
+    .w-2x3
+      .content-item.w-full.mb-8.flex(v-for="item in filteredItems" :key="item.id")
+        .title.w-1x2
+          nuxt-link(:to="`/${contentType}/${item.uid}`").block
+            h2.flex {{ item.data.title }}
+        .meta.w-1x4
+          .year {{ item.data.year }}
+          .location {{ item.data.location }}
+          .type {{ item.data.category }}
+        .featured-image.w-1x4
+          NuxtImg.w-full(
           v-if="item.data.featured_image.url"
           :src="item.data.featured_image.url"
           :alt="item.data.featured_image?.alt || 'Image'"
         )
+      
   </template>
   
   <script setup>
@@ -92,30 +97,14 @@
   const setFilter = (slug) => {
     currentFilter.value = slug === currentFilter.value ? '' : slug
   }
+  
+  // Clear filter
+  const clearFilter = () => {
+    currentFilter.value = ''
+  }
   </script>
   
   <style scoped lang="sass">
-  @media (min-width: 768px) 
-    .content-item a:hover ~ .featured-image 
-      display: block
-      margin-top: .45em
-  .content-item
-    a
-      transition: all 100ms ease-in-out
-      @media (max-width: 767px)
-        &:hover
-          font-variation-settings: "EXPO" -80
-  
-    .featured-image
-      display: none
-  
-  @media (max-width: 767px) 
-    .filter-item a
-      transition: all 150ms ease
-      &:hover
-        font-variation-settings: "EXPO" -80
-  .active
-    font-variation-settings: "EXPO" -40
 
   </style>
   

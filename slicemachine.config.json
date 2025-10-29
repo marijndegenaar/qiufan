@@ -1,5 +1,6 @@
 {
-  "repositoryName": "marijn",
+  "repositoryName": "elifozbay",
   "adapter": "@slicemachine/adapter-nuxt",
-  "libraries": ["./slices"]
+  "libraries": ["./app/slices"],
+  "localSliceSimulatorURL": "http://localhost:3000/slice-simulator"
 }

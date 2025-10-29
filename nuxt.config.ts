@@ -1,3 +1,4 @@
+import { apiEndpoint, repositoryName } from "./slicemachine.config.json";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   // ssr: false,
@@ -5,12 +6,12 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'Marijn Degenaar',
+      title: 'Elif Özbay',
       charset: 'utf-8',
       viewport: 'width=device-width, minimal-ui initial-scale=1, user-scalable=no',
       link: [{ rel: 'icon', type: 'image/png', href: '/fav.png' }],
       meta: [
-        { hid: 'description', name: 'description', content: 'Marijn Degenaar is a designer, based in Berlin' },
+        { hid: 'description', name: 'description', content: 'Elif Özbay is an artist based in Amsterdam' },
         { hid: 'keywords', name: 'keywords', content: '' }
       ],
     },
@@ -33,7 +34,7 @@ export default defineNuxtConfig({
   },
   
   prismic: {
-      endpoint: 'https://marijn.cdn.prismic.io/api/v2',
+      endpoint: apiEndpoint || repositoryName,
       toolbar: false,
       preview: false,
     },

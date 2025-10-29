@@ -1,40 +1,25 @@
 <template lang="pug">
-	.grid-gallery(v-if="isGalleryLoaded && grid === true").flex.flex-wrap.p-1
-		.grid-item.w-full.sm_w-1x2.md_w-1x3.xl_w-1x4(v-for="(item, index) in gallery" :key="index" @click="openLightbox(item.image?.url, item.description, item.media.url, item.embed_url)" @mouseenter="updateHoveredItem(item)" @mouseleave="clearHoveredItem")
-			template(v-if="item.media.kind === 'video' && item.media.url").mr-1
-				video(:src="item.media.url" autoplay muted loop controls controlslist="nofullscreen nodownload noremoteplayback noplaybackrate" disablePictureInPicture).mr-1.w-20
-			template(v-if="item.embed_url")
-				prismic-embed(:field="item.embed_url").mr-1
-			template(v-if="item.image && item.image.url")
-				.aspect-square.bg-gray-100.hover_bg-gray-200.p-8.flex.justify-center.items-center
-					img(:src="item.image?.url").aspect-square.object-contain.hover_cursor-zoom-in
-
-	.gallery-wrap.relative(v-if="isGalleryLoaded && grid!= true")
+	.gallery-wrap.relative(v-if="isGalleryLoaded")
 		.scroller.right-0.hidden.md_block(@click="scrollToNextItem")
 		.gallery.relative.md_w-screen.flex.flex-nowrap.overflow-x-auto.pb-2.pl-2.origin-top-left(v-if="gallery" ref="galleryRef" @scroll="handleScroll")
-			.gallery-item.flex-none(v-for="(item, index) in repeatedGallery" :key="index" @click="openLightbox(item.image?.url, item.description, item.media.url, item.embed_url)" @mouseenter="updateHoveredItem(item)" @mouseleave="clearHoveredItem" :class="{ 'active': index % gallery.length === activeItem }")
-				.description.text-xs.hidden {{ item.description }}
-				template(v-if="item.media.kind === 'file' && item.media.url")
-					video(:src="item.media.url" autoplay muted loop no-controls playsinline controlslist="nofullscreen nodownload noremoteplayback noplaybackrate" disablePictureInPicture :style="videoAspectStyle").gallery-video.object-cover.video.pr-1
-				template(v-if="item.embed_url && !item.media.url")
+			.gallery-item.flex-none(v-for="(item, index) in repeatedGallery" :key="index" @click="openLightbox(item.image?.url, item.caption || item.description, item.media?.url, item.embed_url)"  :class="{ 'active': index % gallery.length === activeItem }")
+				template(v-if="item.embed_url && !item.media?.url")
 					prismic-embed(:field="item.embed_url").pr-1
 				template(v-if="item.image && item.image.url")
-					ImageResizer(:image-src="item.image.url" :imageObj="item.image" ).pr-1
+					ImageResizer(:image-src="item.image.url" :imageObj="item.image").pr-1
 					//- NuxtImg(:src="item.image.url").w-1x6
 			NuxtImg.featured-image.w-2x6(v-if="!gallery[0]" :src="featuredImage.url" :alt="featuredImage.alt")
 	
 	div.lightbox(v-if="lightboxVisible" @click.self="closeLightbox")
 		div.lightbox-content(@click="closeLightbox")
-			template(v-if="lightboxEmbed.embed_url")
+			template(v-if="lightboxEmbed && lightboxEmbed.embed_url")
 				prismic-embed(:field="lightboxEmbed").mr-1
 			template(v-else-if="lightboxMedia")
-				video.lightbox-video(:src="lightboxMedia" autoplay muted loop no-controls controlslist="nofullscreen nodownload noremoteplayback noplaybackrate" disablePictureInPicture).mr-1
-			template(v-else)
+				video.lightbox-video(:src="lightboxMedia" autoplay muted loop controls controlslist="nofullscreen nodownload noremoteplayback noplaybackrate" disablePictureInPicture).mr-1
+			template(v-else-if="lightboxImage")
 				img(:src="lightboxImage" :alt="lightboxCaption" class="lightbox-img")
-			p.lightbox-caption {{ lightboxCaption }}
+			p.lightbox-caption(v-if="lightboxCaption") {{ lightboxCaption }}
 
-	.floating-description.hidden.md_block(v-if="hoveredItem && hoveredItem.description" :style="{ left: cursorX + 'px', top: cursorY + 'px' }")
-		| {{ hoveredItem.description }}
 </template>
 
 
@@ -43,54 +28,66 @@
 	// Props to receive gallery data from parent component
 	const props = defineProps({
 		gallery: Array,
-		featuredImage: Object,
-		grid: Boolean,
-		autoscroll: Boolean,
-		aspectRatio: {
-			type: String,
-			default: '16/9'
-		}
+		featuredImage: Object
 	})
 
 	const galleryRef = ref(null)
 	const lightboxVisible = ref(false)
 	const lightboxImage = ref('')
 	const lightboxMedia = ref('')
-	const lightboxEmbed = ref('')
+	const lightboxEmbed = ref(null)
 	const lightboxCaption = ref('')
 	const isGalleryLoaded = ref(false)
 	const activeItem = ref(0) // Track the active gallery item
-	const cursorX = ref(0)
-	const cursorY = ref(0)
-	const hoveredItem = ref(null)
 
 	// Duplicate the gallery items for endless scrolling
 	const repeatedGallery = computed(() => {
 		return [...props.gallery, ...props.gallery]
 	})
 
-	// Computed style for video aspect ratio
-	const videoAspectStyle = computed(() => {
-		if (!props.aspectRatio || props.aspectRatio === 'auto') return {}
-		const [w, h] = props.aspectRatio.split('/').map(Number)
-		if (!w || !h) return {}
-		return { aspectRatio: `${w} / ${h}` }
-	})
-
 	// Lightbox functions
 	const openLightbox = (imageUrl, caption, mediaUrl, embedUrl) => {
-		lightboxImage.value = imageUrl;
-		lightboxMedia.value = mediaUrl;
-		lightboxEmbed.value = embedUrl;
-		lightboxCaption.value = caption || ''; // Fallback if description is missing
+		// Reset all values first
+		lightboxImage.value = '';
+		lightboxMedia.value = '';
+		lightboxEmbed.value = null;
+		lightboxCaption.value = '';
+		
+		// Set values based on what's available (priority: embed > media > image)
+		if (embedUrl) {
+			lightboxEmbed.value = embedUrl;
+		} else if (mediaUrl) {
+			lightboxMedia.value = mediaUrl;
+		} else if (imageUrl) {
+			lightboxImage.value = imageUrl;
+		}
+		
+		// Handle caption (could be string, Prismic KeyTextField, or null/undefined)
+		if (caption) {
+			if (typeof caption === 'string') {
+				lightboxCaption.value = caption;
+			} else if (caption?.text) {
+				lightboxCaption.value = caption.text;
+			} else if (Array.isArray(caption) && caption[0]?.text) {
+				lightboxCaption.value = caption[0].text;
+			}
+		}
+		
 		lightboxVisible.value = true;
-
 		document.addEventListener('keydown', handleKeydown);
+		// Prevent body scroll when lightbox is open
+		document.body.style.overflow = 'hidden';
 	};
 
 	const closeLightbox = () => {
 		lightboxVisible.value = false
+		lightboxImage.value = ''
+		lightboxMedia.value = ''
+		lightboxEmbed.value = null
+		lightboxCaption.value = ''
 		document.removeEventListener('keydown', handleKeydown)
+		// Restore body scroll
+		document.body.style.overflow = '';
 	}
 
 	const handleKeydown = (event) => {
@@ -138,29 +135,11 @@
 		}
 	}
 
-	const updateHoveredItem = (item) => {
-		hoveredItem.value = item
-	}
-
-	const clearHoveredItem = () => {
-		hoveredItem.value = null
-	}
-
-	const handleMouseMove = (event) => {
-		cursorX.value = event.clientX + 10
-		cursorY.value = event.clientY + 10
-	}
-
 	// Set isGalleryLoaded to true once the gallery data is available
 	onMounted(() => {
 		if (props.gallery && props.gallery.length > 0) {
 			isGalleryLoaded.value = true
 		}
-		window.addEventListener('mousemove', handleMouseMove)
-	})
-
-	onUnmounted(() => {
-		window.removeEventListener('mousemove', handleMouseMove)
 	})
 
 </script>
@@ -178,24 +157,10 @@
 .gallery 
 	-ms-overflow-style: none
 	scrollbar-width: none
-	.image-container
-		cursor: zoom-in
 	.gallery-item
-		video
-			@media (max-width: 767px)
-				height: 110vw
-				aspect-ratio: 3 / 4
-		.description
-			// display: none
+		cursor: zoom-in
 		&.active
-			// border: 2px solid red
-			.description
-				display: block
-				font-variation-settings: "EXPO" -60
-				position: fixed
-				left: 0.5rem
-				bottom: 110vw
-				transform: translateY(-100%)
+			// Active state styling if needed
 
 .scroller
 	position: absolute
@@ -269,35 +234,5 @@
 	max-height: 100%
 	width: 100%
 	height: 100%
-	margin: 0 auto	
-
-.floating-description
-	position: fixed
-	// background: rgba(255, 255, 255, 0.9)
-	padding: 0.5rem .5rem
-	// border-radius: 4px
-	pointer-events: none
-	z-index: 100
-	font-size: 0.8rem
-	white-space: nowrap
-	// box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
-	transform: translateY(-50%)
-	mix-blend-mode: difference
-	color: #fff
-	font-variation-settings: "EXPO" -60
-
-.gallery-video
-	width: 40vw
-	max-width: 90vw
-	height: auto
-	max-height: 50vh
-	object-fit: cover
-
-@media (max-width: 767px)
-	.gallery-video
-		width: 90vw
-		max-width: 100vw
-		height: auto
-		max-height: 60vh
-
+	margin: 0 auto
 </style>  
