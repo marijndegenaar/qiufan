@@ -1,0 +1,70 @@
+
+html, body
+    font-size: 18px // Base font size for mobile
+    line-height: 1.2
+    color: #1a1a1a
+    letter-spacing: -0.04em
+    background: #fff
+
+    @media (min-width: 768px) // Tablet
+        font-size: 22px
+        line-height: 1.2
+
+    @media (min-width: 1024px) // Desktop
+        font-size: 24px
+        line-height: 1.2
+    // @media (min-width: 1440px) // Large desktop
+    //     font-size: 32px
+    //     line-height: 1.1
+
+
+p a 
+    text-decoration: underline
+    color: #1a1a1a
+    text-underline-offset: .07em
+    text-decoration-thickness: 3px
+    &:hover
+      text-decoration: none
+
+a 
+    cursor: pointer
+
+strong, b
+ font-variation-settings: "EXPO" -30
+		
+pre
+    background: #111
+    color: orange
+    text-shadow: 0 0 10px orange
+    border-radius: 5px
+    padding: .5em
+    margin: .5em
+    overflow: auto
+    font-size: .4rem!important
+    line-height: 1.3
+
+h1,h2 
+    // font-weight: bold
+
+.fat
+    font-variation-settings: "EXPO" -80
+
+.embed 
+    position: relative 
+    width: 100% 
+    padding-top: 56.25% 
+    iframe 
+        position: absolute 
+        top: 0 
+        left: 0
+        width: 100% 
+        height: 100%
+
+.intro a, .content a
+ transition: all 100ms ease-in-out
+ font-variation-settings: "EXPO" -30
+ &:hover 
+    font-variation-settings: "EXPO" -90
+
+.intro p, .content p
+  margin-bottom: .5em
