@@ -1,10 +1,20 @@
 <template lang="pug">
   .image-container
-    NuxtImg(ref='image' :src='imageSrc' @load="onImageLoad" v-slot="{ src, isLoaded, imgAttrs }")
+    NuxtImg(
+      ref='image' 
+      :src='imageSrc' 
+      @load="onImageLoad"
+      :width="computedWidth"
+      :height="computedHeight"
+      :sizes="responsiveSizes"
+      quality="85"
+      format="webp"
+      loading="lazy"
+    )
   </template>
   
   <script setup>
-  import { ref, onMounted, onUnmounted, watch } from 'vue'
+  import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
   import { useWindowSize } from '@vueuse/core'
   import { debounce } from 'lodash-es'
   
@@ -22,6 +32,25 @@
   const isImageLoaded = ref(false)
   
   const { width: containerWidth, height: containerHeight } = useWindowSize()
+  
+  // Calculate optimal image dimensions to request
+  const computedWidth = computed(() => {
+    const isMobile = containerWidth.value < 768
+    const widthRatio = isMobile ? 1.1 : 0.4
+    return Math.round(containerWidth.value * widthRatio * 1.5) // 1.5x for retina displays
+  })
+  
+  const computedHeight = computed(() => {
+    if (!props.imageObj?.dimensions) return undefined
+    const { width, height } = props.imageObj.dimensions
+    const aspectRatio = height / width
+    return Math.round(computedWidth.value * aspectRatio)
+  })
+  
+  // Responsive sizes for different breakpoints
+  const responsiveSizes = computed(() => {
+    return 'xs:110vw sm:110vw md:40vw lg:40vw xl:40vw'
+  })
   
   const resizeImage = debounce(() => {
     if (!isImageLoaded.value || !image.value?.$el) return

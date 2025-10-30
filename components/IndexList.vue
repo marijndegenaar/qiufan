@@ -1,6 +1,5 @@
 <template lang="pug">
-  //- #filter.text-xs.fixed.w-full.left-1.top-8.z-10.flex
-  #filter.w-full.p-2.fixed.top-48.w-1x3
+  #filter.p-2.fixed.top-52.w-1x3
     //- .spacer.w-2x5
     //- span.pr-2 🗄️ 
     span.mr-2.hidden.md_block Filter:
@@ -19,16 +18,16 @@
   #project-list.flex.p-2
     .w-1x3.spacer 
     .w-2x3
-      .content-item.w-full.mb-8.flex(v-for="item in filteredItems" :key="item.id")
-        .title.w-1x2
+      .project-item.w-full.mb-8.flex(v-for="item in filteredItems" :key="item.id")
+        .title.w-1x2.text-xl
           nuxt-link(:to="`/${contentType}/${item.uid}`").block
             h2.flex {{ item.data.title }}
         .meta.w-1x4
           .year {{ item.data.year }}
           .location {{ item.data.location }}
-          .type {{ item.data.category }}
-        .featured-image.w-1x4
-          NuxtImg.w-full(
+          .category {{ item.data.category }}
+        .featured-image.w-1x4.bg-blue-100
+          NuxtImg.object-cover.w-full.h-full(
           v-if="item.data.featured_image.url"
           :src="item.data.featured_image.url"
           :alt="item.data.featured_image?.alt || 'Image'"
@@ -105,6 +104,18 @@
   </script>
   
   <style scoped lang="sass">
-
+  .project-item
+    transition: all 600ms
+    cursor: pointer
+    .featured-image
+      aspect-ratio: 4/5
+    .location, .category, .featured-image
+      opacity: 0
+      transition: all 200ms
+    &:hover 
+      .featured-image, .location, .category
+        opacity: 1
+      .title
+        color: red
   </style>
   

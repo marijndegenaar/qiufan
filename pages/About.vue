@@ -1,6 +1,6 @@
 <template lang="pug">
 .px-2.pb-4.mt-14
-  PrismicRichText.text-xl(:field="aboutData.data.content")
+  PrismicRichText(:field="aboutData.data.content")
 </template>
 
 <script setup>

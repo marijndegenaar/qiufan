@@ -7,8 +7,9 @@
       .meta.w-1x2
         .year {{ year }}
         .category {{ category }}
+        
         .location(v-if="location")  {{ location }}
-    NuxtLink(to="/projects").fixed.right-1.top-10.md_right-4._top-2.z-10.back ← Back
+    NuxtLink(to="/projects").fixed.right-1.top-2.md_right-4._op-2.z-10.back ← Back
   
 
   Gallery( :gallery="gallery" :featured-image="featuredImage") 
@@ -47,7 +48,7 @@ const { data: postData } = await useAsyncData("post", () =>
 )
 
 // Destructure postData to avoid repetition
-const { title, year, location, gallery, featured_image: featuredImage, description } = postData.value.data
+const { title, year, category, location, gallery, featured_image: featuredImage, description } = postData.value.data
 
 // Lightbox state
 const showLightbox = ref(false)

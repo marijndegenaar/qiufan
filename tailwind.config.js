@@ -11,7 +11,8 @@ module.exports = {
         wide: "16 / 7",
         "4x3": "4 / 3",
         "3x4": "3 / 4",
-        mobile: "4 / 5"
+        "4x5": "4 / 5",
+        "5x4": "5 / 4",
       },
       borderRadius: {
         xxl: "5rem",

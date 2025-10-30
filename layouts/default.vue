@@ -1,7 +1,7 @@
 <template lang="pug">
-Header.fixed.p-2.z-10
+Header.fixed.px-2.pt-2.mt-4.z-10
 //- GifCloud
-#layout.default.pt-32.md_pt-12.relative
+#layout.default.mt-6
     slot
 //- Footer
 </template>
