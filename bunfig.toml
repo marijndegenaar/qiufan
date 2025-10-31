@@ -1,0 +1,5 @@
+[install]
+# Force estree-walker to version 3.0.3
+[install.override]
+"estree-walker" = "3.0.3"
+
