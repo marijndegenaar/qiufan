@@ -3,7 +3,7 @@
   #mobile_menu.right-1.fixed.text-sm(v-if="isMobileMenuVisible" @click="toggleMenu") ++
   #menu(v-if="!isMobileMenuVisible" @click="toggleMenu")
     .menu-items.flex-col.flex.md_block
-      nuxt-link(
+      nuxt-link.hover_text-red-500(
         v-for="item in menu" 
         :key="item.slug" 
         :to="item.slug"
@@ -11,6 +11,8 @@
         @mouseleave="$emit('menuHover', '')"
       ) 
         span {{ item.name }}, 
+      nuxt-link(to="https://www.instagram.com/yabzofile" target="_blank").hover_text-red-500 IG
+    
 </template>
 <script setup>
 import autoAnimate from "@formkit/auto-animate";
@@ -58,23 +60,12 @@ onBeforeUnmount(() => {
 });
 </script>
 <style lang="sass" scoped>
-.logo
-  font-family: "P"
-  // transform: scaleX(.8)
-  transform-origin: left
-  // letter-spacing: 0.2
-  &:hover
-    transform: scale(1, .4)
-    // transform: scaleY(0.4)
-
-a
-    transition: all 200ms ease-in-out
 
 a:hover, .router-link-active, #mobile_menu
-  font-variation-settings: "EXPO" -60
-  // text-decoration: underline
-  // text-decoration-thickness: 1.5px
-  // text-underline-offset: 4px
+  
+#menu
+  font-size: 1.5rem
+  font-family: "G", serif
 
 @media (max-width: 767px)
   .menu-items 

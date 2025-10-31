@@ -19,19 +19,19 @@
     .w-1x3.spacer 
     .w-2x3
       .project-item.w-full.mb-8.flex(v-for="item in filteredItems" :key="item.id")
-        .title.w-1x2.text-xl.leading-none
-          nuxt-link(:to="`/${contentType}/${item.uid}`").block
-            h2.flex {{ item.data.title }}
-        .meta.w-1x4.text-sm.mt-4
-          .year {{ item.data.year }}
-          .location {{ item.data.location }}
-          .category {{ item.data.category }}
-        .featured-image.w-1x4.bg-blue-100
-          NuxtImg.object-cover.w-full.h-full(
-          v-if="item.data.featured_image.url"
-          :src="item.data.featured_image.url"
-          :alt="item.data.featured_image?.alt || 'Image'"
-        )
+        nuxt-link(:to="`/${contentType}/${item.uid}`").w-full.flex
+          .title.w-1x2.text-xl.leading-none
+              h2.flex {{ item.data.title }}
+          .meta.w-1x4.text-sm.mt-4
+            .year {{ item.data.year }}
+            .location {{ item.data.location }}
+            .category {{ item.data.category }}
+          .featured-image.w-1x4.bg-blue-100
+            NuxtImg.object-cover.w-full.h-full(
+            v-if="item.data.featured_image.url"
+            :src="item.data.featured_image.url"
+            :alt="item.data.featured_image?.alt || 'Image'"
+          )
       
   </template>
   
@@ -103,19 +103,26 @@
   }
   </script>
   
-  <style scoped lang="sass">
-  .project-item
-    transition: all 600ms
-    cursor: pointer
-    .featured-image
-      aspect-ratio: 4/5
-    .location, .category, .featured-image
-      opacity: 0
-      transition: all 200ms
-    &:hover 
-      .featured-image, .location, .category
-        opacity: 1
-      .title
-        color: red
-  </style>
+<style scoped lang="sass">
+.filter-item
+  transition: color 200ms
+  &:hover
+    color: red
+  &.active
+    text-decoration: underline
+
+.project-item
+  transition: all 600ms
+  cursor: pointer
+  .featured-image
+    aspect-ratio: 4/5
+  .location, .category, .featured-image
+    opacity: 0
+    transition: all 200ms
+  &:hover 
+    .featured-image, .location, .category
+      opacity: 1
+    .title
+      color: red
+</style>
   

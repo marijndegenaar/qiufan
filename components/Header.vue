@@ -12,7 +12,7 @@
         | 12 October, Mutter, Amsterdam
         br
         | 28 November, KW, Berlin
-    Menu.fixed.left-2.bottom-2
+    Menu.fixed.left-2.bottom-2.text-lg
     
 </template>
   
