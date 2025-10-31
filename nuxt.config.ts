@@ -3,6 +3,22 @@ import { apiEndpoint, repositoryName } from "./slicemachine.config.json";
 export default defineNuxtConfig({
   // ssr: false,
   devtools: { enabled: true },
+  
+  nitro: {
+    prerender: {
+      ignore: ['/slice-simulator']
+    }
+  },
+  
+  hooks: {
+    'pages:extend'(pages) {
+      // Remove slice-simulator page in production
+      if (process.env.NODE_ENV === 'production') {
+        const index = pages.findIndex(page => page.path === '/slice-simulator')
+        if (index !== -1) pages.splice(index, 1)
+      }
+    }
+  },
 
   app: {
     head: {
