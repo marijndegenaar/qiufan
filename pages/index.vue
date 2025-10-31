@@ -7,11 +7,11 @@ IndexList(contentType="project")
 </template>
 
 <script setup>
-const { client } = usePrismic()
-// get content from 'homepage'
-const { data: homepageData } = await useAsyncData("homepage", () =>
-  client.getSingle("homepage")
-);
+// const { client } = usePrismic()
+// // get content from 'homepage'
+// const { data: homepageData } = await useAsyncData("homepage", () =>
+//   client.getSingle("homepage")
+// );
 </script>
 
 <style lang="sass" scoped>

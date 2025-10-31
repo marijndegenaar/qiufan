@@ -22,11 +22,11 @@
 // import { computed } from 'vue'
 // import { useRoute } from 'vue-router'
 
-const { client } = usePrismic()
-// get content from 'homepage'
-const { data: homepageData } = await useAsyncData("homepage", () =>
-client.getSingle("homepage")
-);
+// const { client } = usePrismic()
+// // get content from 'homepage'
+// const { data: homepageData } = await useAsyncData("homepage", () =>
+// client.getSingle("homepage")
+// );
 
 const route = useRoute()
 const isUidPage = computed(() => {
