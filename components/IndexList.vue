@@ -1,5 +1,5 @@
 <template lang="pug">
-  #filter.p-2.fixed.top-52.w-1x3
+  #filter.p-2.fixed.top-52.w-1x3.text-sm
     //- .spacer.w-2x5
     //- span.pr-2 🗄️ 
     span.mr-2.hidden.md_block Filter:
@@ -15,14 +15,14 @@
   
   //- pre {{ filteredItems }}
 
-  #project-list.flex.p-2
+  #project-list.flex.mt-2
     .w-1x3.spacer 
     .w-2x3
       .project-item.w-full.mb-8.flex(v-for="item in filteredItems" :key="item.id")
-        .title.w-1x2.text-xl
+        .title.w-1x2.text-xl.leading-none
           nuxt-link(:to="`/${contentType}/${item.uid}`").block
             h2.flex {{ item.data.title }}
-        .meta.w-1x4
+        .meta.w-1x4.text-sm.mt-4
           .year {{ item.data.year }}
           .location {{ item.data.location }}
           .category {{ item.data.category }}

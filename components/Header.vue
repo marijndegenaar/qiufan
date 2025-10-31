@@ -3,7 +3,7 @@
     //- nuxt-link(to="/").w-1x4 Marijn Degenaar 
     nuxt-link(to="/").md_pr-8.mb-2
       strong.text-lg.logo Elif Satanaya Özbay 
-      div(v-if="!isUidPage && isBioVisible").bio 
+      div(v-if="!isUidPage && isBioVisible").bio.text-sm.w-3x4
         | is an artist working with performances, installations, and text, using the horror genre to explore suspense and merge readymades with texts.
         br
         br

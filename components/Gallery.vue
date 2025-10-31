@@ -17,16 +17,20 @@
 			:class="{ 'is-dragging': isDragging }"
 		)
 			.gallery-item.flex-none(v-for="(item, index) in repeatedGallery" :key="index" @click="handleItemClick(item, $event)"  :class="{ 'active': index === activeItem }")
-				template(v-if="item.embed_url && !item.media?.url")
-					prismic-embed(:field="item.embed_url").pr-1
 				template(v-if="item.image && item.image.url")
-					ImageResizer(:image-src="item.image.url" :imageObj="item.image").pr-1
-					//- NuxtImg(:src="item.image.url").w-1x6
+					.relative.pr-1
+						ImageResizer(:image-src="item.image.url" :imageObj="item.image")
+						.play-icon(v-if="(item.embed && item.embed.embed_url) || (item.embed_url && item.embed_url.embed_url)")
+							svg(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor")
+								path(d="M8 5v14l11-7z")
+				template(v-else-if="(item.embed || item.embed_url)")
+					prismic-embed(:field="item.embed || item.embed_url").pr-1
+					//- NuxtImg(:src="item.image.url).w-1x6
 			NuxtImg.featured-image.w-2x6(v-if="!gallery[0]" :src="featuredImage.url" :alt="featuredImage.alt")
 	
 	div.lightbox(v-if="lightboxVisible" @click.self="closeLightbox")
 		div.lightbox-content(@click="closeLightbox")
-			template(v-if="lightboxEmbed && lightboxEmbed.embed_url")
+			template(v-if="lightboxEmbed")
 				prismic-embed(:field="lightboxEmbed").mr-1
 			template(v-else-if="lightboxMedia")
 				video.lightbox-video(:src="lightboxMedia" autoplay muted loop controls controlslist="nofullscreen nodownload noremoteplayback noplaybackrate" disablePictureInPicture).mr-1
@@ -255,7 +259,12 @@
 			return
 		}
 		
-		openLightbox(item.image?.url, item.caption || item.description, item.media?.url, item.embed_url)
+		// Only pass embed if it has actual content
+		const embedField = (item.embed && item.embed.embed_url) || (item.embed_url && item.embed_url.embed_url) 
+			? (item.embed || item.embed_url) 
+			: null
+		
+		openLightbox(item.image?.url, item.caption || item.description, item.video?.url || item.media?.url, embedField)
 	}
 
 	// Set isGalleryLoaded to true once the gallery data is available
@@ -338,8 +347,35 @@
 		cursor: zoom-in
 		scroll-snap-align: start
 		scroll-snap-stop: normal
+		position: relative
 		&.active
 			// Active state styling if needed
+
+.play-icon
+	position: absolute
+	top: 50%
+	left: 50%
+	transform: translate(-50%, -50%)
+	width: 4rem
+	height: 4rem
+	background-color: rgba(255, 255, 255, 0.9)
+	border-radius: 50%
+	display: flex
+	align-items: center
+	justify-content: center
+	pointer-events: none
+	transition: all 0.3s ease
+	z-index: 2
+	
+	svg
+		width: 2rem
+		height: 2rem
+		color: #000
+		margin-left: 0.25rem
+	
+	.gallery-item:hover &
+		transform: translate(-50%, -50%) scale(1.1)
+		background-color: rgba(255, 255, 255, 1)
 
 .scroller
 	position: absolute

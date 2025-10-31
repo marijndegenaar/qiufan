@@ -1,31 +1,34 @@
 <template lang="pug">
-  header.flex.mb-2
+  header.flex.mb-4
     .spacer.w-1x3 
     .head.flex.w-2x3
-      .project-title.text-lg.w-1x2
+      .project-title.text-xl.w-1x2.leading-none.mt-2
         h1 {{ title }} 
-      .meta.w-1x2
+      .meta.w-1x2.mt-6.text-sm
         .year {{ year }}
-        .category {{ category }}
-        
         .location(v-if="location")  {{ location }}
-    NuxtLink(to="/projects").fixed.right-1.top-2.md_right-4._op-2.z-10.back ← Back
+        .category {{ category }}
+    NuxtLink(to="/projects").fixed.text-sm.right-1.top-8.md_right-4._op-2.z-10.back.hover_text-red-500 ← Back to projects
   
 
-  Gallery( :gallery="gallery" :featured-image="featuredImage") 
+  Gallery( :gallery="gallery" :featured-image="featuredImage")
 
-  .desc-wrapper.w-full.flex
-    .spacer.w-1x3 .
-    .w-7x12
-      PrismicRichText(:field="postData.data.description")
-
-
-  //- .content.p-1.md_p-2.container(v-if="postData.data.description")
-    template(v-for="(block, index) in processedBlocks" :key="index")
-      RichTextWithAudio(v-if="block.type === 'paragraph'" :text="block.text" :spans="block.spans")
-      .image-wrap(:class="getImageClass(block.width, block.height)" class="pr-2 mb-4" v-else-if="block.type === 'image'")
-        img.block-img(:src="block.url" :alt="block.alt" @click="openLightbox(block.url, block.alt)")
-        .caption.text-xs.pt-1(v-if='block.alt != "Image"') {{ block.alt }}
+  .desc-wrapper.w-full.mt-8
+    template(v-for="(group, index) in groupedBlocks" :key="index")
+      .flex.w-full(v-if="group.type === 'portrait-pair'")
+        .spacer.w-1x6
+        .flex.gap-4.mb-4.w-10x12
+          .w-1x2.p-2(v-for="(img, imgIndex) in group.images" :key="imgIndex")
+            img.w-full.cursor-pointer(:src="img.url" :alt="img.alt" @click="openLightbox(img.url, img.alt)")
+      .flex.w-full(v-else-if="group.type === 'image' && !isPortrait(group.width, group.height)")
+        .spacer.w-1x6
+        .w-10x12.mb-4.p-2
+          img.w-full.cursor-pointer(:src="group.url" :alt="group.alt" @click="openLightbox(group.url, group.alt)")
+      .flex.w-full(v-else)
+        .spacer.w-1x3 .
+        .w-7x12
+          div(v-if="group.type === 'paragraph'" v-html="group.html")
+          img.cursor-pointer(v-else-if="group.type === 'image'" :src="group.url" :alt="group.alt" :class="getImageClass(group.width, group.height)" @click="openLightbox(group.url, group.alt)")
 
   div.lightbox(v-if="showLightbox" @click.self="closeLightbox")
     div.lightbox-content(@click="closeLightbox")
@@ -76,35 +79,124 @@ const handleKeydown = (event) => {
   }
 }
 
-// Process the description content
-const processedBlocks = computed(() => {
-  if (!description) return []
-  
-  return description.map(block => {
-    if (block.type === 'paragraph') {
-      return { 
-        type: 'paragraph', 
-        text: block.text,
-        spans: block.spans
-      }
-    } else if (block.type === 'image') {
-      return { 
-        type: 'image', 
-        url: block.url, 
-        alt: block.alt || 'Image',
-        width: block.dimensions?.width || 0,
-        height: block.dimensions?.height || 0
-      }
-    }
-    return block
-  })
-})
+// Helper function to determine if image is portrait
+const isPortrait = (width, height) => {
+  if (!width || !height) return false
+  return height > width
+}
 
-// Helper function to determine image orientation
+// Helper function to determine image orientation class
 const getImageClass = (width, height) => {
   if (!width || !height) return 'w-4x5' // default to horizontal if dimensions unknown
   return width > height ? 'w-4x5' : 'w-1x2'
 }
+
+// Helper function to convert paragraph to HTML
+const paragraphToHtml = (block) => {
+  if (!block.text) return ''
+  
+  let html = block.text
+  
+  // Apply spans (bold, italic, links, etc.)
+  if (block.spans && block.spans.length > 0) {
+    // Sort spans by start position in reverse to avoid index shifting
+    const sortedSpans = [...block.spans].sort((a, b) => b.start - a.start)
+    
+    sortedSpans.forEach(span => {
+      const before = html.substring(0, span.start)
+      const content = html.substring(span.start, span.end)
+      const after = html.substring(span.end)
+      
+      if (span.type === 'strong') {
+        html = before + `<strong>${content}</strong>` + after
+      } else if (span.type === 'em') {
+        html = before + `<em>${content}</em>` + after
+      } else if (span.type === 'hyperlink') {
+        html = before + `<a href="${span.data.url}" target="_blank">${content}</a>` + after
+      }
+    })
+  }
+  
+  return `<p>${html}</p>`
+}
+
+// Group consecutive portrait images together
+const groupedBlocks = computed(() => {
+  if (!description) return []
+  
+  const groups = []
+  let i = 0
+  
+  while (i < description.length) {
+    const block = description[i]
+    
+    if (block.type === 'image') {
+      const width = block.dimensions?.width || 0
+      const height = block.dimensions?.height || 0
+      
+      // Check if this is a portrait image and if the next block is also a portrait image
+      if (isPortrait(width, height) && i + 1 < description.length) {
+        const nextBlock = description[i + 1]
+        if (nextBlock.type === 'image') {
+          const nextWidth = nextBlock.dimensions?.width || 0
+          const nextHeight = nextBlock.dimensions?.height || 0
+          
+          if (isPortrait(nextWidth, nextHeight)) {
+            // Group these two portrait images together
+            groups.push({
+              type: 'portrait-pair',
+              images: [
+                { url: block.url, alt: block.alt || 'Image', width, height },
+                { url: nextBlock.url, alt: nextBlock.alt || 'Image', width: nextWidth, height: nextHeight }
+              ]
+            })
+            i += 2 // Skip both images
+            continue
+          }
+        }
+      }
+      
+      // Single image (not part of a portrait pair)
+      groups.push({
+        type: 'image',
+        url: block.url,
+        alt: block.alt || 'Image',
+        width,
+        height
+      })
+      i++
+    } else if (block.type === 'paragraph') {
+      groups.push({
+        type: 'paragraph',
+        html: paragraphToHtml(block)
+      })
+      i++
+    } else if (block.type === 'heading1') {
+      groups.push({
+        type: 'paragraph',
+        html: `<h1>${block.text}</h1>`
+      })
+      i++
+    } else if (block.type === 'heading2') {
+      groups.push({
+        type: 'paragraph',
+        html: `<h2>${block.text}</h2>`
+      })
+      i++
+    } else if (block.type === 'heading3') {
+      groups.push({
+        type: 'paragraph',
+        html: `<h3>${block.text}</h3>`
+      })
+      i++
+    } else {
+      // Handle other block types
+      i++
+    }
+  }
+  
+  return groups
+})
 
 </script>
   
