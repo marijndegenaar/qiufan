@@ -1,14 +1,26 @@
 {
   "format": "page",
   "id": "cv",
+  "label": "CV",
+  "repeatable": false,
+  "status": true,
   "json": {
     "Main": {
+      "cv_field": {
+        "type": "StructuredText",
+        "config": {
+          "label": "CV field",
+          "placeholder": "",
+          "allowTargetBlank": true,
+          "multi": "paragraph,heading4,strong,em,hyperlink,embed,list-item,o-list-item"
+        }
+      },
       "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
         "config": {
           "choices": {}
-        },
-        "fieldset": "Slice Zone",
-        "type": "Slices"
+        }
       }
     },
     "SEO & Metadata": {
@@ -38,8 +50,5 @@
         "type": "Image"
       }
     }
-  },
-  "label": "CV",
-  "repeatable": false,
-  "status": true
+  }
 }

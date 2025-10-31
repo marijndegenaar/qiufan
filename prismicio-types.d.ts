@@ -137,6 +137,17 @@ type CvDocumentDataSlicesSlice = never;
  */
 interface CvDocumentData {
   /**
+   * CV field field in *CV*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: cv.cv_field
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  cv_field: prismic.RichTextField;
+
+  /**
    * Slice Zone field in *CV*
    *
    * - **Field Type**: Slice Zone
