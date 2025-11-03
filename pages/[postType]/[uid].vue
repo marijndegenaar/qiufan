@@ -46,13 +46,22 @@ const route = useRoute()
 const postType = route.path.includes('/exhibition') ? 'exhibition' : 'project'
 
 // Fetch data dynamically based on the postType
-const { data: postData } = await useAsyncData("post", () =>
-  client.getByUID(postType, route.params.uid)
-)
+const { data: postData, error: fetchError } = await useAsyncData("post", async () => {
+  try {
+    return await client.getByUID(postType, route.params.uid)
+  } catch (err) {
+    console.error('Error fetching post:', err)
+    return null
+  }
+})
 
 // Check if data exists
-if (!postData.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+if (!postData.value || fetchError.value) {
+  throw createError({ 
+    statusCode: 404, 
+    statusMessage: 'Page Not Found',
+    message: fetchError.value?.message || 'Content not found'
+  })
 }
 
 // Destructure postData to avoid repetition

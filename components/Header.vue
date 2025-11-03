@@ -17,26 +17,12 @@
 </template>
   
 <script setup>
-// import { ref, computed } from 'vue'
-// import { useRoute } from 'vue-router'
-
-// import { usePrismic } from 'prismic-nuxt'
-
-// const { client } = usePrismic()
-// // get content from 'homepage'
-// const { data: homepageData } = await useAsyncData("homepage", () =>
-// client.getSingle("homepage")
-// );
-
 const route = useRoute()
 const isUidPage = computed(() => {
-  return route.params.uid !== undefined
+  return route?.params?.uid !== undefined
 })
 
-
 const isBioVisible = ref(true)
-
-
 </script>
 
 <style lang="sass" scoped>

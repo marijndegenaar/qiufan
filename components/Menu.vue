@@ -25,27 +25,22 @@ const menu = [
 ];
 
 //get current route
-const route = ref(useRoute().path);
-//get slug from route
-const slug = ref(route.value.split("/")[1]);
-
-watchEffect(() => {
-  //update slug when route changes
-  slug.value = useRoute().path.split("/")[1];
-});
+const route = useRoute();
+const routePath = computed(() => route?.path || '/');
+const slug = computed(() => routePath.value.split("/")[1] || '');
 
 defineEmits(['menuHover'])
 
 const isMobileMenuVisible = ref(false);
 
 const handleScroll = () => {
-  if (window.innerWidth <= 767) { // Check if the screen width is mobile size
+  if (process.client && window.innerWidth <= 767) { // Check if the screen width is mobile size
     isMobileMenuVisible.value = window.scrollY > 50;
   }
 };
 
 const toggleMenu = () => {
-  if (window.innerWidth <= 767) {
+  if (process.client && window.innerWidth <= 767) {
     isMobileMenuVisible.value = !isMobileMenuVisible.value;
   }
 };

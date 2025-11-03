@@ -45,9 +45,10 @@
   
   const placeholderImage = '/placeholder.jpg' // Replace if needed
   
-  // Load items
-  const { data: items } = await useAsyncData(`${props.contentType}-list`, () =>
-    client.getAllByType(props.contentType).then(results => {
+  // Load items with error handling
+  const { data: items, error } = await useAsyncData(`${props.contentType}-list`, async () => {
+    try {
+      const results = await client.getAllByType(props.contentType)
       return results.sort((a, b) => {
         // First sort by category
         const categoryA = a.data.category || ''
@@ -61,8 +62,16 @@
         const yearB = parseInt(b.data.year) || 0
         return yearB - yearA
       })
-    })
-  )
+    } catch (err) {
+      console.error('Error fetching content:', err)
+      return []
+    }
+  })
+  
+  // Log error if present
+  if (error.value) {
+    console.error('AsyncData error:', error.value)
+  }
   
   // Current filter state
   const currentFilter = ref('')
