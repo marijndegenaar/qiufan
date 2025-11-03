@@ -17,10 +17,10 @@
 </template>
   
 <script setup>
-// import { ref, onMounted, onBeforeUnmount } from 'vue'
-// import { usePrismic } from 'prismic-nuxt'
-// import { computed } from 'vue'
+// import { ref, computed } from 'vue'
 // import { useRoute } from 'vue-router'
+
+// import { usePrismic } from 'prismic-nuxt'
 
 // const { client } = usePrismic()
 // // get content from 'homepage'

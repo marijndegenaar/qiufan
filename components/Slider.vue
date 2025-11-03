@@ -43,13 +43,13 @@ const props = defineProps({
 	items_to_show: Number // Change to Number for proper usage
 })
 
-const config = {
-	itemsToShow: props.items_to_show, // Use props.items_to_show directly
+const config = computed(() => ({
+	itemsToShow: props.items_to_show || 3.5, // Use props.items_to_show with fallback
 	gap: 5,
 	wrapAround: true,
 	snapAlign: "start",
 	// height: "600"
-}
+}))
 
 const lightboxVisible = ref(false)
 const lightboxImage = ref('')

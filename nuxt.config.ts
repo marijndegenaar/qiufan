@@ -1,4 +1,4 @@
-import { apiEndpoint, repositoryName } from "./slicemachine.config.json";
+import { repositoryName } from "./slicemachine.config.json";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   // ssr: false,
@@ -50,7 +50,7 @@ export default defineNuxtConfig({
   },
   
   prismic: {
-      endpoint: apiEndpoint || repositoryName,
+      endpoint: repositoryName,
       toolbar: false,
       preview: false,
     },

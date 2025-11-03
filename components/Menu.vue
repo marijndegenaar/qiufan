@@ -16,7 +16,6 @@
 </template>
 <script setup>
 import autoAnimate from "@formkit/auto-animate";
-import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const menu = [ 
 { name: "Work", slug: "/projects" },

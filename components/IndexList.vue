@@ -36,8 +36,6 @@
   </template>
   
   <script setup>
-  // import { ref, computed } from 'vue'
-  // import { useAsyncData } from '#app'
   import { usePrismic } from '@prismicio/vue'
   
   const { client } = usePrismic()
@@ -49,7 +47,7 @@
   const placeholderImage = '/placeholder.jpg' // Replace if needed
   
   // Load items
-  const { data: items } = await useAsyncData(() =>
+  const { data: items } = await useAsyncData(`${props.contentType}-list`, () =>
     client.getAllByType(props.contentType).then(results => {
       return results.sort((a, b) => {
         // First sort by category
