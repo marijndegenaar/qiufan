@@ -15,7 +15,7 @@
   
   //- pre {{ filteredItems }}
 
-  #project-list.flex.mt-2
+  #project-list.flex.mt-2(v-if="filteredItems")
     .w-1x3.spacer 
     .w-2x3
       .project-item.w-full.mb-8.flex(v-for="item in filteredItems" :key="item.id")
@@ -36,7 +36,6 @@
   </template>
   
   <script setup>
-  import { usePrismic } from '@prismicio/vue'
   
   const { client } = usePrismic()
   
@@ -83,6 +82,7 @@
   
   // Filter function
   const filteredItems = computed(() => {
+    if (!items.value) return []
     if (!currentFilter.value) return items.value
     return items.value.filter(item => {
       const cat = item.data.category?.toLowerCase().replace(/\s+/g, '-')

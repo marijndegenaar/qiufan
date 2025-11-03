@@ -50,6 +50,11 @@ const { data: postData } = await useAsyncData("post", () =>
   client.getByUID(postType, route.params.uid)
 )
 
+// Check if data exists
+if (!postData.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+}
+
 // Destructure postData to avoid repetition
 const { title, year, category, location, gallery, featured_image: featuredImage, description } = postData.value.data
 
