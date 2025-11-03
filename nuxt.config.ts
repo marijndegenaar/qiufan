@@ -1,24 +1,6 @@
-import { repositoryName } from "./slicemachine.config.json";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  // ssr: false,
   devtools: { enabled: true },
-  
-  nitro: {
-    prerender: {
-      ignore: ['/slice-simulator']
-    }
-  },
-  
-  hooks: {
-    'pages:extend'(pages) {
-      // Remove slice-simulator page in production
-      if (process.env.NODE_ENV === 'production') {
-        const index = pages.findIndex(page => page.path === '/slice-simulator')
-        if (index !== -1) pages.splice(index, 1)
-      }
-    }
-  },
 
   app: {
     head: {
@@ -33,11 +15,16 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@nuxtjs/prismic', '@nuxtjs/tailwindcss', '@formkit/auto-animate/nuxt', '@nuxt/image', 'vue3-carousel-nuxt'],
+  modules: [
+    '@nuxtjs/prismic',
+    '@nuxtjs/tailwindcss',
+    '@formkit/auto-animate/nuxt',
+    '@nuxt/image',
+    'vue3-carousel-nuxt'
+  ],
 
   image: {
-    // dir: '~/assets/images/graphic_design', // Your image folder
-    quality: 70, // default: 70
+    quality: 70,
     format: ['webp', 'avif', 'jpeg'],
     screens: {
       xs: 320,
@@ -48,33 +35,15 @@ export default defineNuxtConfig({
       xxl: 1536,
     },
   },
-  
+
   prismic: {
-      endpoint: repositoryName,
-      toolbar: false,
-      preview: false,
-    },
+    endpoint: 'elifozbay'
+  },
 
   css: [
-      "@/assets/fonts/fonts.css",
-      "@/assets/sass/main.sass"
+    '@/assets/fonts/fonts.css',
+    '@/assets/sass/main.sass'
   ],
-
-  router: {
-  },
-
-  // routeRules: {
-  //   '/': { redirect: '/projects' },
-  // },
-  clientConfig: {
-      routes: [
-      // Fallback route for content without language prefix
-      {
-        type: "page",
-        path: "/:uid",
-      },
-    ],
-  },
 
   compatibilityDate: '2025-03-18',
 })
