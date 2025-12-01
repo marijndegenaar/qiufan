@@ -1,7 +1,12 @@
 import { apiEndpoint, repositoryName } from "./slicemachine.config.json";
+import pugPlugin from "vite-plugin-pug";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+
+  vite: {
+    plugins: [pugPlugin()],
+  },
 
   app: {
     head: {
@@ -18,9 +23,33 @@ export default defineNuxtConfig({
 
   modules: [
     '@nuxtjs/prismic',
-    '@nuxtjs/tailwindcss', 
+    '@nuxtjs/tailwindcss',
     '@nuxt/image',
+    '@nuxtjs/i18n',
   ],
+
+  i18n: {
+    locales: [
+      {
+        code: 'en',
+        language: 'en-US',
+        name: 'English'
+      },
+      {
+        code: 'cn',
+        language: 'zh-CN',
+        name: '中文'
+      }
+    ],
+    defaultLocale: 'en',
+    strategy: 'no_prefix',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root'
+    },
+    vueI18n: './i18n.config.ts'
+  },
 
   image: {
     quality: 70,
@@ -36,7 +65,10 @@ export default defineNuxtConfig({
   },
 
   prismic: {
-    endpoint: apiEndpoint || repositoryName
+    endpoint: apiEndpoint || repositoryName,
+    clientConfig: {
+      routes: []
+    }
   },
 
   css: [

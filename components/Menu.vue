@@ -1,39 +1,81 @@
 <template lang="pug">
 #menu-wrap
   #mobile_menu.right-1.fixed.text-sm(v-if="isMobileMenuVisible" @click="toggleMenu") ++
-  #menu(v-if="!isMobileMenuVisible" @click="toggleMenu")
+  #menu(v-if="!isMobileMenuVisible")
     .menu-items.flex-col.flex.md_block
-      nuxt-link.hover_text-red-500(
-        v-for="item in menu" 
-        :key="item.slug" 
-        :to="item.slug"
-        @mouseenter="$emit('menuHover', item.slug)"
+      a.hover_text-red-500.cursor-pointer(
+        v-for="item in menuItems"
+        :key="item.section"
+        :class="{ 'active': activeSection === item.section }"
+        @click="scrollToSection(item.section)"
+        @mouseenter="$emit('menuHover', item.section)"
         @mouseleave="$emit('menuHover', '')"
-      ) 
-        span.ml-8 {{ item.name }}
-    
+      )
+        span.link.ml-8 {{ item.name }}
+
 </template>
 <script setup>
+const { locale } = useI18n()
 
-const menu = [ 
-  { name: "News", slug: "" },
-  { name: "Publications", slug: "" },  
-  { name: "Books", slug: "" },
-  { name: "Info", slug: "" },
-];
+const menuLabels = {
+  en: {
+    news: "News",
+    publications: "Publications",
+    books: "Books",
+    info: "Info"
+  },
+  cn: {
+    news: "新闻",
+    publications: "出版物",
+    books: "书籍",
+    info: "信息"
+  }
+}
 
-//get current route
-
-const slug = computed(() => routePath.value.split("/")[1] || '');
+const menuItems = computed(() => {
+  const labels = menuLabels[locale.value] || menuLabels.en
+  return [
+    { name: labels.info, section: "hero" },
+    { name: labels.news, section: "news" },
+    { name: labels.publications, section: "publications" },
+    { name: labels.books, section: "books" },
+  ]
+});
 
 defineEmits(['menuHover'])
 
 const isMobileMenuVisible = ref(false);
+const activeSection = ref('hero');
+
+const scrollToSection = (sectionId) => {
+  if (process.client) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+};
+
+const updateActiveSection = () => {
+  if (!process.client) return;
+
+  const sections = ['hero', 'news', 'publications', 'books'];
+  const scrollPosition = window.scrollY + window.innerHeight / 3;
+
+  for (let i = sections.length - 1; i >= 0; i--) {
+    const element = document.getElementById(sections[i]);
+    if (element && element.offsetTop <= scrollPosition) {
+      activeSection.value = sections[i];
+      break;
+    }
+  }
+};
 
 const handleScroll = () => {
-  if (process.client && window.innerWidth <= 767) { // Check if the screen width is mobile size
+  if (process.client && window.innerWidth <= 767) {
     isMobileMenuVisible.value = window.scrollY > 50;
   }
+  updateActiveSection();
 };
 
 const toggleMenu = () => {
@@ -44,6 +86,7 @@ const toggleMenu = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
+  updateActiveSection();
 });
 
 onBeforeUnmount(() => {
@@ -52,17 +95,27 @@ onBeforeUnmount(() => {
 </script>
 <style lang="sass" scoped>
 
-a:hover, .router-link-active, #mobile_menu
-  
+a
+  text-decoration: none
+  border-bottom: 2px solid transparent
+  transition: border-color 0.3s ease
+  display: inline-block
+
+a span:hover, #mobile_menu
+  border-bottom-color: currentColor
+
+a.active span
+  border-bottom: 2px solid currentColor
+
 #menu
   font-size: 1.5rem
 
 @media (max-width: 767px)
-  .menu-items 
+  .menu-items
     a
       span
           background: #fff
           border-radius: .4em
           padding: 0 0.2em
-          
+
 </style>
