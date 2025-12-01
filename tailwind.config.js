@@ -3,6 +3,16 @@ module.exports = {
 
   theme: {
     extend: {
+      colors: {
+        avocado: "#F0FBE1",
+        lilac: "#EBDEFF",
+        purple: "#320954",
+        sand: "#EFEDDE",
+        brown: "#675D57",
+        grey: "#D8D5E0",
+        purp: "#594A6F",
+        green: "#85A863",
+      },
       scale: {
         '200': '2',
         '300': '3'
@@ -74,17 +84,17 @@ module.exports = {
     }),
   },
   content: [
-    `/components/**/*.{vue,js,ts}`,
-    `/layouts/**/*.vue`,
-    `/pages/**/*.vue`,
-    `/composables/**/*.{js,ts}`,
-    `/plugins/**/*.{js,ts}`,
-    `/utils/**/*.{js,ts}`,
-    `/slices/**/*.{js,ts}`,
-    `/App.{js,ts,vue}`,
-    `/app.{js,ts,vue}`,
-    `/Error.{js,ts,vue}`,
-    `/error.{js,ts,vue}`,
-    `/app.config.{js,ts}`,
+    "./components/**/*.{vue,js,ts}",
+    "./layouts/**/*.vue",
+    "./pages/**/*.vue",
+    "./composables/**/*.{js,ts}",
+    "./plugins/**/*.{js,ts}",
+    "./utils/**/*.{js,ts}",
+    "./slices/**/*.{js,ts}",
+    "./App.{js,ts,vue}",
+    "./app.{js,ts,vue}",
+    "./Error.{js,ts,vue}",
+    "./error.{js,ts,vue}",
+    "./app.config.{js,ts}",
   ],
 };

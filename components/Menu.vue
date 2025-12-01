@@ -10,23 +10,20 @@
         @mouseenter="$emit('menuHover', item.slug)"
         @mouseleave="$emit('menuHover', '')"
       ) 
-        span {{ item.name }}, 
-      nuxt-link(to="https://www.instagram.com/yabzofile" target="_blank").hover_text-red-500 IG
+        span.ml-8 {{ item.name }}
     
 </template>
 <script setup>
-import autoAnimate from "@formkit/auto-animate";
 
 const menu = [ 
-{ name: "Work", slug: "/projects" },
-  // { name: "Exhibitions", slug: "/exhibitions" },
-  { name: "About", slug: "/about" },
-  
+  { name: "News", slug: "" },
+  { name: "Publications", slug: "" },  
+  { name: "Books", slug: "" },
+  { name: "Info", slug: "" },
 ];
 
 //get current route
-const route = useRoute();
-const routePath = computed(() => route?.path || '/');
+
 const slug = computed(() => routePath.value.split("/")[1] || '');
 
 defineEmits(['menuHover'])
@@ -59,7 +56,6 @@ a:hover, .router-link-active, #mobile_menu
   
 #menu
   font-size: 1.5rem
-  font-family: "G", serif
 
 @media (max-width: 767px)
   .menu-items 
@@ -69,12 +65,4 @@ a:hover, .router-link-active, #mobile_menu
           border-radius: .4em
           padding: 0 0.2em
           
-
-// @media (max-width: 767px)
-//   .menu-items 
-//     a
-//       &::after
-//         content: ', '
-//       &:last-child::after
-//         content: ''
 </style>

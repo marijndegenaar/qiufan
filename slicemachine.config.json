@@ -1,6 +1,7 @@
 {
-  "repositoryName": "elifozbay",
+  "repositoryName": "chenqiufan",
+  "apiEndpoint": "https://chenqiufan.cdn.prismic.io/api/v2",
   "adapter": "@slicemachine/adapter-nuxt",
-  "libraries": ["./slices"],
+  "libraries": ["./app/slices"],
   "localSliceSimulatorURL": "http://localhost:3000/slice-simulator"
 }

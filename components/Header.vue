@@ -1,37 +1,19 @@
 <template lang="pug">
-#header.flex.w-full.md_w-1x3.flex-wrap
-    //- nuxt-link(to="/").w-1x4 Marijn Degenaar 
-    nuxt-link(to="/").md_pr-8.mb-2
-      strong.text-lg.logo Elif Satanaya Özbay 
-      div(v-if="!isUidPage && isBioVisible").bio.text-sm.w-3x4
-        | is an artist working with performances, installations, and text, using the horror genre to explore suspense and merge readymades with texts.
-        br
-        br
-        | Upcoming: 
-        br
-        | 12 October, Mutter, Amsterdam
-        br
-        | 28 November, KW, Berlin
-    Menu.fixed.left-2.bottom-2.text-lg
+#header
+	h1.logo.fixed.top-2.left-2 Chen Qiufan
+	Menu.fixed.top-2.right-2.text-sm
+	
     
+	.locale-select.fixed.bottom-2.text-sm
+		select
+			option(value="en") EN
+			option(value="cn") CN
 </template>
   
 <script setup>
-const route = useRoute()
-const isUidPage = computed(() => {
-  return route?.params?.uid !== undefined
-})
 
-const isBioVisible = ref(true)
 </script>
 
 <style lang="sass" scoped>
-@keyframes rotate
-  from
-    transform: rotate(0deg)
-  to
-    transform: rotate(360deg)
 
-.logo
-  font-family: 'G', serif
 </style>

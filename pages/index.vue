@@ -1,5 +1,6 @@
 <template lang="pug">
-  IndexList(contentType="project")
+  main
+    News
 </template>
 
 <script setup>

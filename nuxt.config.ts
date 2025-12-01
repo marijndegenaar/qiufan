@@ -1,15 +1,16 @@
+import { apiEndpoint, repositoryName } from "./slicemachine.config.json";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
   app: {
     head: {
-      title: 'Elif Özbay',
+      title: 'Chen Qiuan',
       charset: 'utf-8',
       viewport: 'width=device-width, minimal-ui initial-scale=1, user-scalable=no',
       link: [{ rel: 'icon', type: 'image/png', href: '/fav.png' }],
       meta: [
-        { hid: 'description', name: 'description', content: 'Elif Özbay is an artist based in Amsterdam' },
+        { hid: 'description', name: 'description', content: '' },
         { hid: 'keywords', name: 'keywords', content: '' }
       ],
     },
@@ -17,10 +18,8 @@ export default defineNuxtConfig({
 
   modules: [
     '@nuxtjs/prismic',
-    '@nuxtjs/tailwindcss',
-    '@formkit/auto-animate/nuxt',
+    '@nuxtjs/tailwindcss', 
     '@nuxt/image',
-    'vue3-carousel-nuxt'
   ],
 
   image: {
@@ -37,7 +36,7 @@ export default defineNuxtConfig({
   },
 
   prismic: {
-    endpoint: 'elifozbay'
+    endpoint: apiEndpoint || repositoryName
   },
 
   css: [

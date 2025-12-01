@@ -69,60 +69,93 @@ type ContentRelationshipFieldWithData<
   >;
 }[Exclude<TCustomType[number], string>["id"]];
 
-type CvDocumentDataSlicesSlice = never;
+type BooksDocumentDataSlicesSlice = never;
 
 /**
- * Content for CV documents
+ * Content for Books documents
  */
-interface CvDocumentData {
+interface BooksDocumentData {
   /**
-   * CV field field in *CV*
+   * Title field in *Books*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: books.title
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  title: prismic.KeyTextField;
+
+  /**
+   * Description field in *Books*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
-   * - **API ID Path**: cv.cv_field
+   * - **API ID Path**: books.description
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/fields/rich-text
    */
-  cv_field: prismic.RichTextField;
+  description: prismic.RichTextField;
 
   /**
-   * Slice Zone field in *CV*
+   * Category field in *Books*
+   *
+   * - **Field Type**: Select
+   * - **Placeholder**: *None*
+   * - **API ID Path**: books.category
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/select
+   */
+  category: prismic.SelectField<"Novels" | "Short-fiction collections">;
+
+  /**
+   * Featured image field in *Books*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: books.featured_image
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  featured_image: prismic.ImageField<never>;
+
+  /**
+   * Slice Zone field in *Books*
    *
    * - **Field Type**: Slice Zone
    * - **Placeholder**: *None*
-   * - **API ID Path**: cv.slices[]
+   * - **API ID Path**: books.slices[]
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/slices
    */
-  slices: prismic.SliceZone<CvDocumentDataSlicesSlice> /**
-   * Meta Title field in *CV*
+  slices: prismic.SliceZone<BooksDocumentDataSlicesSlice>; /**
+   * Meta Title field in *Books*
    *
    * - **Field Type**: Text
    * - **Placeholder**: A title of the page used for social media and search engines
-   * - **API ID Path**: cv.meta_title
+   * - **API ID Path**: books.meta_title
    * - **Tab**: SEO & Metadata
    * - **Documentation**: https://prismic.io/docs/fields/text
-   */;
+   */
   meta_title: prismic.KeyTextField;
 
   /**
-   * Meta Description field in *CV*
+   * Meta Description field in *Books*
    *
    * - **Field Type**: Text
    * - **Placeholder**: A brief summary of the page
-   * - **API ID Path**: cv.meta_description
+   * - **API ID Path**: books.meta_description
    * - **Tab**: SEO & Metadata
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
   meta_description: prismic.KeyTextField;
 
   /**
-   * Meta Image field in *CV*
+   * Meta Image field in *Books*
    *
    * - **Field Type**: Image
    * - **Placeholder**: *None*
-   * - **API ID Path**: cv.meta_image
+   * - **API ID Path**: books.meta_image
    * - **Tab**: SEO & Metadata
    * - **Documentation**: https://prismic.io/docs/fields/image
    */
@@ -130,183 +163,213 @@ interface CvDocumentData {
 }
 
 /**
- * CV document from Prismic
+ * Books document from Prismic
  *
- * - **API ID**: `cv`
- * - **Repeatable**: `false`
+ * - **API ID**: `books`
+ * - **Repeatable**: `true`
  * - **Documentation**: https://prismic.io/docs/content-modeling
  *
  * @typeParam Lang - Language API ID of the document.
  */
-export type CvDocument<Lang extends string = string> =
-  prismic.PrismicDocumentWithoutUID<Simplify<CvDocumentData>, "cv", Lang>;
+export type BooksDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithUID<Simplify<BooksDocumentData>, "books", Lang>;
 
-type ProjectDocumentDataSlicesSlice = never;
+type NewsDocumentDataSlicesSlice = never;
 
 /**
- * Item in *Project → Gallery*
+ * Content for News documents
  */
-export interface ProjectDocumentDataGalleryItem {
+interface NewsDocumentData {
   /**
-   * Image field in *Project → Gallery*
-   *
-   * - **Field Type**: Image
-   * - **Placeholder**: *None*
-   * - **API ID Path**: project.gallery[].image
-   * - **Documentation**: https://prismic.io/docs/fields/image
-   */
-  image: prismic.ImageField<never>;
-
-  /**
-   * Caption field in *Project → Gallery*
+   * Title field in *News*
    *
    * - **Field Type**: Text
    * - **Placeholder**: *None*
-   * - **API ID Path**: project.gallery[].caption
-   * - **Documentation**: https://prismic.io/docs/fields/text
-   */
-  caption: prismic.KeyTextField;
-
-  /**
-   * Embed field in *Project → Gallery*
-   *
-   * - **Field Type**: Embed
-   * - **Placeholder**: *None*
-   * - **API ID Path**: project.gallery[].embed
-   * - **Documentation**: https://prismic.io/docs/fields/embed
-   */
-  embed: prismic.EmbedField;
-
-  /**
-   * Video field in *Project → Gallery*
-   *
-   * - **Field Type**: Link
-   * - **Placeholder**: *None*
-   * - **API ID Path**: project.gallery[].video
-   * - **Documentation**: https://prismic.io/docs/fields/link
-   */
-  video: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
-}
-
-/**
- * Content for Project documents
- */
-interface ProjectDocumentData {
-  /**
-   * Title field in *Project*
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: *None*
-   * - **API ID Path**: project.title
+   * - **API ID Path**: news.title
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
   title: prismic.KeyTextField;
 
   /**
-   * Year field in *Project*
-   *
-   * - **Field Type**: Number
-   * - **Placeholder**: *None*
-   * - **API ID Path**: project.year
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/fields/number
-   */
-  year: prismic.NumberField;
-
-  /**
-   * Location field in *Project*
+   * Subtitle field in *News*
    *
    * - **Field Type**: Text
    * - **Placeholder**: *None*
-   * - **API ID Path**: project.location
+   * - **API ID Path**: news.subtitle
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
-  location: prismic.KeyTextField;
+  subtitle: prismic.KeyTextField;
 
   /**
-   * Category field in *Project*
+   * Category field in *News*
    *
    * - **Field Type**: Select
    * - **Placeholder**: *None*
-   * - **API ID Path**: project.category
+   * - **API ID Path**: news.category
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/fields/select
    */
-  category: prismic.SelectField<"Lecture" | "Performance" | "Video">;
+  category: prismic.SelectField<"News" | "Interview" | "Event">;
 
   /**
-   * Featured image field in *Project*
+   * Featured image field in *News*
    *
    * - **Field Type**: Image
    * - **Placeholder**: *None*
-   * - **API ID Path**: project.featured_image
+   * - **API ID Path**: news.featured_image
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/fields/image
    */
   featured_image: prismic.ImageField<never>;
 
   /**
-   * Embed field in *Project*
-   *
-   * - **Field Type**: Embed
-   * - **Placeholder**: *None*
-   * - **API ID Path**: project.embed
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/fields/embed
-   */
-  embed: prismic.EmbedField;
-
-  /**
-   * Description field in *Project*
+   * Description field in *News*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
-   * - **API ID Path**: project.description
+   * - **API ID Path**: news.description
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/fields/rich-text
    */
   description: prismic.RichTextField;
 
   /**
-   * Slice Zone field in *Project*
+   * Slice Zone field in *News*
    *
    * - **Field Type**: Slice Zone
    * - **Placeholder**: *None*
-   * - **API ID Path**: project.slices[]
+   * - **API ID Path**: news.slices[]
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/slices
    */
-  slices: prismic.SliceZone<ProjectDocumentDataSlicesSlice> /**
-   * Gallery field in *Project*
+  slices: prismic.SliceZone<NewsDocumentDataSlicesSlice>; /**
+   * Meta Title field in *News*
    *
-   * - **Field Type**: Group
+   * - **Field Type**: Text
+   * - **Placeholder**: A title of the page used for social media and search engines
+   * - **API ID Path**: news.meta_title
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_title: prismic.KeyTextField;
+
+  /**
+   * Meta Description field in *News*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A brief summary of the page
+   * - **API ID Path**: news.meta_description
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_description: prismic.KeyTextField;
+
+  /**
+   * Meta Image field in *News*
+   *
+   * - **Field Type**: Image
    * - **Placeholder**: *None*
-   * - **API ID Path**: project.gallery[]
-   * - **Tab**: Gallery
-   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
-   */;
-  gallery: prismic.GroupField<Simplify<ProjectDocumentDataGalleryItem>>;
+   * - **API ID Path**: news.meta_image
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  meta_image: prismic.ImageField<never>;
 }
 
 /**
- * Project document from Prismic
+ * News document from Prismic
  *
- * - **API ID**: `project`
+ * - **API ID**: `news`
  * - **Repeatable**: `true`
  * - **Documentation**: https://prismic.io/docs/content-modeling
  *
  * @typeParam Lang - Language API ID of the document.
  */
-export type ProjectDocument<Lang extends string = string> =
-  prismic.PrismicDocumentWithUID<
-    Simplify<ProjectDocumentData>,
-    "project",
+export type NewsDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithUID<Simplify<NewsDocumentData>, "news", Lang>;
+
+type PublicationsDocumentDataSlicesSlice = never;
+
+/**
+ * Content for Publications documents
+ */
+interface PublicationsDocumentData {
+  /**
+   * Links field in *Publications*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: publications.links
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  links: prismic.RichTextField;
+
+  /**
+   * Slice Zone field in *Publications*
+   *
+   * - **Field Type**: Slice Zone
+   * - **Placeholder**: *None*
+   * - **API ID Path**: publications.slices[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/slices
+   */
+  slices: prismic.SliceZone<PublicationsDocumentDataSlicesSlice>; /**
+   * Meta Title field in *Publications*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A title of the page used for social media and search engines
+   * - **API ID Path**: publications.meta_title
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_title: prismic.KeyTextField;
+
+  /**
+   * Meta Description field in *Publications*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A brief summary of the page
+   * - **API ID Path**: publications.meta_description
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_description: prismic.KeyTextField;
+
+  /**
+   * Meta Image field in *Publications*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: publications.meta_image
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  meta_image: prismic.ImageField<never>;
+}
+
+/**
+ * Publications document from Prismic
+ *
+ * - **API ID**: `publications`
+ * - **Repeatable**: `false`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type PublicationsDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithoutUID<
+    Simplify<PublicationsDocumentData>,
+    "publications",
     Lang
   >;
 
-export type AllDocumentTypes = CvDocument | ProjectDocument;
+export type AllDocumentTypes =
+  | BooksDocument
+  | NewsDocument
+  | PublicationsDocument;
 
 declare module "@prismicio/client" {
   interface CreateClient {
@@ -329,13 +392,15 @@ declare module "@prismicio/client" {
 
   namespace Content {
     export type {
-      CvDocument,
-      CvDocumentData,
-      CvDocumentDataSlicesSlice,
-      ProjectDocument,
-      ProjectDocumentData,
-      ProjectDocumentDataSlicesSlice,
-      ProjectDocumentDataGalleryItem,
+      BooksDocument,
+      BooksDocumentData,
+      BooksDocumentDataSlicesSlice,
+      NewsDocument,
+      NewsDocumentData,
+      NewsDocumentDataSlicesSlice,
+      PublicationsDocument,
+      PublicationsDocumentData,
+      PublicationsDocumentDataSlicesSlice,
       AllDocumentTypes,
     };
   }
