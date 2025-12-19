@@ -12,7 +12,14 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'B';
+    src: url('BugrinoTrials-Light.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 html, body{
-    font-family: 'A', sans-serif;
+    font-family: 'B', sans-serif;
     
 }   

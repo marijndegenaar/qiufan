@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebGPU Test</title>
+</head>
+<body>
+    <h1>WebGPU Compatibility Test</h1>
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+
+        function log(message, type = 'info') {
+            const p = document.createElement('p');
+            p.style.color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'black';
+            p.textContent = message;
+            results.appendChild(p);
+        }
+
+        async function testWebGPU() {
+            // Test 1: Check if navigator.gpu exists
+            log(`1. navigator.gpu exists: ${!!navigator.gpu}`, navigator.gpu ? 'success' : 'error');
+
+            if (!navigator.gpu) {
+                log('WebGPU is not available in this browser', 'error');
+                log('Try updating your browser or using Chrome/Edge 113+', 'info');
+                return;
+            }
+
+            // Test 2: Try to request adapter
+            log('2. Requesting WebGPU adapter...');
+            try {
+                const adapter = await navigator.gpu.requestAdapter();
+
+                if (!adapter) {
+                    log('navigator.gpu.requestAdapter() returned null', 'error');
+                    log('Possible causes:', 'error');
+                    log('- Hardware acceleration is disabled', 'error');
+                    log('- GPU is not supported', 'error');
+                    log('- Running in a VM or remote desktop', 'error');
+                    log('- GPU is blocklisted by the browser', 'error');
+                    log('', 'info');
+                    log('Go to chrome://gpu to see detailed GPU information', 'info');
+                    return;
+                }
+
+                log('✓ Adapter obtained successfully!', 'success');
+                log(`   Adapter name: ${adapter.name || 'Unknown'}`);
+
+                // Test 3: Try to get device
+                log('3. Requesting WebGPU device...');
+                const device = await adapter.requestDevice();
+                log('✓ Device obtained successfully!', 'success');
+                log(`   Max texture dimension: ${device.limits.maxTextureDimension2D}`);
+
+                // Test 4: Try to get canvas format
+                const format = navigator.gpu.getPreferredCanvasFormat();
+                log(`✓ Preferred canvas format: ${format}`, 'success');
+
+                log('', 'info');
+                log('🎉 WebGPU is fully functional!', 'success');
+
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+                log(`Stack: ${error.stack}`, 'error');
+            }
+        }
+
+        testWebGPU();
+    </script>
+</body>
+</html>

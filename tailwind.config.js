@@ -7,6 +7,7 @@ module.exports = {
         avocado: "#F0FBE1",
         lilac: "#EBDEFF",
         purple: "#320954",
+        lightpurple: "rgb(209 184 229)",
         sand: "#EFEDDE",
         brown: "#675D57",
         grey: "#D8D5E0",
@@ -33,9 +34,10 @@ module.exports = {
     },
     fontSize: {
       xs: ".625rem",
-      sm: ".875rem",
+      sm: ".75rem",
       base: "1rem",
       normal: "1rem",
+      md: "1.25rem",
       lg: "1.5rem",
       xl: "2rem",
       xxl: "3rem"

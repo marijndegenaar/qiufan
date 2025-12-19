@@ -1,9 +1,9 @@
 <template lang="pug">
 #menu-wrap
   #mobile_menu.right-1.fixed.text-sm(v-if="isMobileMenuVisible" @click="toggleMenu") ++
-  #menu(v-if="!isMobileMenuVisible")
+  #menu(v-if="!isMobileMenuVisible" :class="menuColorClass")
     .menu-items.flex-col.flex.md_block
-      a.hover_text-red-500.cursor-pointer(
+      a.cursor-pointer(
         v-for="item in menuItems"
         :key="item.section"
         :class="{ 'active': activeSection === item.section }"
@@ -46,6 +46,19 @@ defineEmits(['menuHover'])
 
 const isMobileMenuVisible = ref(false);
 const activeSection = ref('hero');
+
+const menuColorClass = computed(() => {
+  switch (activeSection.value) {
+    case 'news':
+      return 'text-purple';
+    case 'publications':
+      return 'text-green';
+    case 'books':
+      return 'text-brown';
+    default:
+      return 'text-white';
+  }
+});
 
 const scrollToSection = (sectionId) => {
   if (process.client) {
@@ -109,6 +122,7 @@ a.active span
 
 #menu
   font-size: 1.5rem
+  transition: color 0.3s ease
 
 @media (max-width: 767px)
   .menu-items

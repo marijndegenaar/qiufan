@@ -1,6 +1,6 @@
 <template lang="pug">
 #header
-	h1.logo.fixed.top-2.left-2 Chen Qiufan
+	//- h1.logo.fixed.top-2.left-2 Chen Qiufan
 	Menu.fixed.top-2.right-2.text-sm
 
 

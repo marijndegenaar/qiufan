@@ -6,7 +6,8 @@ ClientOnly
 News.p-2
 Publications.p-2
 Books.p-2
-//- #layout.default.mt-4    
+ShaderDemo
+//- #layout.default.mt-4
     slot
 //- Footer
 </template>

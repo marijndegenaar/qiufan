@@ -154,7 +154,7 @@ const resize = () => {
   composite.resize()
 }
 
-const run = (t) => {
+const run = () => {
   if (!device || !reactionDiffusion || !composite || !webGPUContext) return
 
   // create the global pulse animation value: sin with one cycle per second
@@ -192,8 +192,14 @@ const init = async () => {
   }
 
   try {
-    const format = navigator.gpu.getPreferredCanvasFormat()
     const adapter = await navigator.gpu.requestAdapter()
+
+    if (!adapter) {
+      hasWebGPU.value = false
+      return
+    }
+
+    const format = navigator.gpu.getPreferredCanvasFormat()
     device = await adapter.requestDevice()
 
     webGPUContext = canvasRef.value.getContext('webgpu')
@@ -227,7 +233,7 @@ onMounted(async () => {
     await font.load()
     await document.fonts.ready
   } catch (error) {
-    console.warn('Font loading failed, using fallback:', error)
+    console.warn('Font loading failed, using system fallback:', error)
   }
 
   await init()
