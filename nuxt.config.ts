@@ -6,13 +6,9 @@ export default defineNuxtConfig({
 
   vite: {
     plugins: [pugPlugin()],
-    optimizeDeps: {
-      exclude: ['@slicemachine/plugin-kit']
-    },
-    ssr: {
-      noExternal: ['@slicemachine/plugin-kit']
-    }
   },
+
+  ignore: process.env.NODE_ENV === 'production' ? ['pages/slice-simulator.vue'] : [],
 
   app: {
     head: {
