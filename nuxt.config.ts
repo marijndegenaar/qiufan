@@ -6,6 +6,12 @@ export default defineNuxtConfig({
 
   vite: {
     plugins: [pugPlugin()],
+    optimizeDeps: {
+      exclude: ['@slicemachine/plugin-kit']
+    },
+    ssr: {
+      noExternal: ['@slicemachine/plugin-kit']
+    }
   },
 
   app: {
