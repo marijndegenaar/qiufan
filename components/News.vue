@@ -56,7 +56,7 @@ const getPrismicLang = (loc) => {
 }
 
 const { data, refresh } = await useAsyncData(
-  () => `news-${locale.value}`,
+  `news-${locale.value}`,
   async () => {
     const lang = getPrismicLang(locale.value)
     console.log('[News.vue] Fetching news for locale:', locale.value, '| Prismic lang:', lang)
@@ -123,12 +123,14 @@ const selectNews = (item) => {
   selectedNews.value = item;
 };
 
-// Auto-select the latest news item when filtered news changes
-// Run immediately to set initial selection
-if (filteredNews.value && filteredNews.value.length > 0) {
-  selectedNews.value = filteredNews.value[0];
-}
+// Auto-select the latest news item after component is mounted (client-side only)
+onMounted(() => {
+  if (filteredNews.value && filteredNews.value.length > 0 && !selectedNews.value) {
+    selectedNews.value = filteredNews.value[0];
+  }
+});
 
+// Watch for changes and auto-select if selection is cleared
 watch(filteredNews, (newFilteredNews) => {
   if (newFilteredNews && newFilteredNews.length > 0 && !selectedNews.value) {
     selectedNews.value = newFilteredNews[0];

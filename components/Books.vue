@@ -50,7 +50,7 @@ const getPrismicLang = (loc) => {
 }
 
 const { data, refresh } = await useAsyncData(
-  () => `books-${locale.value}`,
+  `books-${locale.value}`,
   () => usePrismic().client.getAllByType("books", { lang: getPrismicLang(locale.value) })
 );
 
