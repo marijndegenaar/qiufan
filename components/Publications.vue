@@ -1,13 +1,19 @@
 <template lang="pug">
-  #publications.w-screen.min-h-screen.bg-avocado.text-green.py-24
-    template(v-if="publication")
-      //- h1.text-xl.font-bold.mb-4 {{ publication.data.title || (locale === 'cn' ? '出版物' : 'Publications') }}
-      template(v-if="publication.data.links")
-        PrismicRichText(:field="publication.data.links")
-      //- pre {{ publication.data.links }}
-    template(v-else)
-      h1.text-xl.font-bold.mb-4 {{ locale === 'cn' ? '出版物' : 'Publications' }}
-      p {{ locale === 'cn' ? '没有找到出版物文档' : 'No publications document found.' }}
+  ShaderBackground#publications.w-screen.min-h-screen.text-green(
+    bg="avocado"
+    ink="green"
+    shape="circle"
+    :pixel-size="3"
+  )
+    .py-24
+      template(v-if="publication")
+        //- h1.text-xl.font-bold.mb-4 {{ publication.data.title || (locale === 'cn' ? '出版物' : 'Publications') }}
+        template(v-if="publication.data.links")
+          PrismicRichText(:field="publication.data.links")
+        //- pre {{ publication.data.links }}
+      template(v-else)
+        h1.text-xl.font-bold.mb-4 {{ locale === 'cn' ? '出版物' : 'Publications' }}
+        p {{ locale === 'cn' ? '没有找到出版物文档' : 'No publications document found.' }}
 </template>
 
 <script setup>

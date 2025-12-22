@@ -3,10 +3,13 @@ Header.fixed.px-2.pt-2.mt-4.z-10
 //- Hero
 ClientOnly
   ReactionDiffusion
-News.p-2
-Publications.p-2
-Books.p-2
-ShaderDemo
+News
+Publications
+Books
+Newsletter
+About
+//- ShaderDemo(bg="purple", ink="lilac")
+//- ShaderDemo(:showControls="true" ink="purple" bg="lilac")
 //- #layout.default.mt-4
     slot
 //- Footer

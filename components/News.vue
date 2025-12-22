@@ -1,6 +1,11 @@
 <template lang="pug">
-  #news.w-screen.min-h-screen.bg-lilac.text-purple.py-24.px-4
-    .flex.flex-col.md_flex-row.gap-8.max-w-7xl.mx-auto
+  ShaderBackground#news.w-screen.min-h-screen.text-purple(
+    bg="lilac"
+    ink="purple"
+    shape="circle"
+    :pixel-size="3"
+  )
+    .flex.flex-col.md_flex-row.gap-8.max-w-7xl.mx-auto.py-24.px-4
       .news-menu.w-full.md_w-1x3
         //- h1.text-xl.font-bold.mb-4 {{ locale === 'cn' ? '新闻' : 'News' }}
 

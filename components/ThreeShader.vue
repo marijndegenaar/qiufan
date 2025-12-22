@@ -1,9 +1,11 @@
 <template>
-  <div
-    ref="containerRef"
-    class="hero-bg"
-    :style="{ backgroundColor: bg }"
-  />
+  <div class="shader-wrapper">
+    <div
+      ref="containerRef"
+      class="hero-bg"
+      :style="{ backgroundColor: resolveColor(bg) }"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -228,6 +230,27 @@ const SHAPE_MAP: Record<string, number> = {
   diamond: 3,
 };
 
+// Tailwind color palette
+const TAILWIND_COLORS: Record<string, string> = {
+  avocado: '#F0FBE1',
+  lilac: '#EBDEFF',
+  purple: '#320954',
+  lightpurple: 'rgb(209 184 229)',
+  sand: '#EFEDDE',
+  brown: '#675D57',
+  grey: '#D8D5E0',
+  purp: '#594A6F',
+  green: '#85A863',
+};
+
+// Helper to resolve color (accepts hex, rgb, or Tailwind color name)
+const resolveColor = (color: string): string => {
+  if (color.startsWith('#') || color.startsWith('rgb')) {
+    return color;
+  }
+  return TAILWIND_COLORS[color] || color;
+};
+
 let canvas: HTMLCanvasElement | null = null;
 let renderer: THREE.WebGLRenderer | null = null;
 let animationFrameId: number | null = null;
@@ -242,7 +265,7 @@ const initThreeScene = () => {
   uniforms = {
     uResolution: { value: new THREE.Vector2() },
     uTime: { value: 0 },
-    uColor: { value: new THREE.Color(props.ink) },
+    uColor: { value: new THREE.Color(resolveColor(props.ink)) },
     uClickPos: { value: Array.from({ length: MAX_CLICKS }, () => new THREE.Vector2(-1, -1)) },
     uClickTimes: { value: new Float32Array(MAX_CLICKS) },
     uShapeType: { value: SHAPE_MAP[props.shape] ?? 0 },
@@ -276,8 +299,17 @@ const initThreeScene = () => {
     if (!canvas || !renderer || !containerRef.value) return;
     const w = containerRef.value.clientWidth || window.innerWidth;
     const h = containerRef.value.clientHeight || window.innerHeight;
+    const dpr = window.devicePixelRatio || 1;
+
+    // Set canvas buffer size to physical pixels for sharp rendering
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+
+    // Set renderer size to logical pixels
     renderer.setSize(w, h, false);
-    uniforms.uResolution.value.set(w, h);
+
+    // Pass physical pixel resolution to shader
+    uniforms.uResolution.value.set(w * dpr, h * dpr);
   };
 
   window.addEventListener('resize', resize);
@@ -343,7 +375,7 @@ onUnmounted(() => {
 // Watch for prop changes
 watch(() => props.ink, (newInk) => {
   if (uniforms) {
-    uniforms.uColor.value = new THREE.Color(newInk);
+    uniforms.uColor.value = new THREE.Color(resolveColor(newInk));
   }
 });
 
@@ -361,6 +393,12 @@ watch(() => props.pixelSize, (newSize) => {
 </script>
 
 <style scoped>
+.shader-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
 .hero-bg {
   width: 100%;
   height: 100%;
@@ -373,4 +411,5 @@ watch(() => props.pixelSize, (newSize) => {
   height: 100%;
   display: block;
 }
+
 </style>
