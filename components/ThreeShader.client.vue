@@ -405,13 +405,17 @@ watch(() => props.pixelSize, (newSize) => {
 .shader-wrapper {
   width: 100%;
   height: 100%;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .hero-bg {
   width: 100%;
   height: 100%;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   overflow: hidden;
 }
 
@@ -419,6 +423,9 @@ watch(() => props.pixelSize, (newSize) => {
   width: 100%;
   height: 100%;
   display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 </style>
