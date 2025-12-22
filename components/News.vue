@@ -124,31 +124,37 @@ const selectNews = (item) => {
 };
 
 // Auto-select the latest news item when filtered news changes
+// Run immediately to set initial selection
+if (filteredNews.value && filteredNews.value.length > 0) {
+  selectedNews.value = filteredNews.value[0];
+}
+
 watch(filteredNews, (newFilteredNews) => {
   if (newFilteredNews && newFilteredNews.length > 0 && !selectedNews.value) {
     selectedNews.value = newFilteredNews[0];
   }
-}, { immediate: true });
+});
 
-// Format date based on locale
+// Format date based on locale - using UTC to ensure consistency between SSR and client
 const formatDate = (dateString) => {
   if (!dateString) return '';
 
   const date = new Date(dateString);
 
   if (locale.value === 'cn') {
-    // Chinese format: YYYY年MM月DD日
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
+    // Chinese format: YYYY年MM月DD日 - using UTC to prevent timezone mismatches
+    const year = date.getUTCFullYear();
+    const month = date.getUTCMonth() + 1;
+    const day = date.getUTCDate();
     return `${year}年${month}月${day}日`;
   } else {
-    // English format: Month DD, YYYY
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    // English format: Month DD, YYYY - using UTC to prevent timezone mismatches
+    const year = date.getUTCFullYear();
+    const month = date.getUTCMonth();
+    const day = date.getUTCDate();
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+    return `${months[month]} ${day}, ${year}`;
   }
 };
 
