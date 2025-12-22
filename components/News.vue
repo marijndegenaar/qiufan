@@ -24,7 +24,7 @@
             .news-item.cursor-pointer.rounded.transition-colors.p-2(
               v-for="item in filteredNews"
               :key="item.id"
-              :class="{ 'bg-purple/10 text-purple': selectedNews?.id === item.id }"
+              :class="{ 'bg-purple/10 text-purple': isMounted && selectedNews?.id === item.id }"
               @click="selectNews(item)"
               class="hover_bg-purple hover_text-lilac"
             )
@@ -33,17 +33,18 @@
         template(v-else)
           p.text-sm {{ locale === 'cn' ? '没有找到新闻' : 'No news items found.' }}
 
-      .news-detail.w-full.md_w-1x2(v-if="selectedNews")
-        .overflow-hidden
-          PrismicImage.w-full.md_w-1x2(
-            v-if="selectedNews.data.featured_image?.url"
-            :field="selectedNews.data.featured_image"
-          )
-          .content.mt-2
-            .meta.text-sm {{ formatDate(selectedNews.first_publication_date) }} — {{ selectedNews.data.subtitle }}
-            h2.text-lg.mb-2 {{ selectedNews.data.title }}
-            .news-content(v-if="selectedNews.data.description")
-              PrismicRichText(:field="selectedNews.data.description")
+      ClientOnly
+        .news-detail.w-full.md_w-1x2(v-if="selectedNews")
+          .overflow-hidden
+            PrismicImage.w-full.md_w-1x2(
+              v-if="selectedNews.data.featured_image?.url"
+              :field="selectedNews.data.featured_image"
+            )
+            .content.mt-2
+              .meta.text-sm {{ formatDate(selectedNews.first_publication_date) }} — {{ selectedNews.data.subtitle }}
+              h2.text-lg.mb-2 {{ selectedNews.data.title }}
+              .news-content(v-if="selectedNews.data.description")
+                PrismicRichText(:field="selectedNews.data.description")
 </template>
 
 <script setup>
@@ -111,6 +112,7 @@ const filteredNews = computed(() => {
 
 // Selected news item state
 const selectedNews = ref(null);
+const isMounted = ref(false);
 
 // Function to set active category
 const setCategory = (category) => {
@@ -125,6 +127,7 @@ const selectNews = (item) => {
 
 // Auto-select the latest news item after component is mounted (client-side only)
 onMounted(() => {
+  isMounted.value = true;
   if (filteredNews.value && filteredNews.value.length > 0 && !selectedNews.value) {
     selectedNews.value = filteredNews.value[0];
   }
