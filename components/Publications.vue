@@ -18,6 +18,7 @@
 
 <script setup>
 const { locale } = useI18n()
+const prismic = usePrismic()
 
 // Map locale to Prismic language code
 const getPrismicLang = (loc) => {
@@ -25,17 +26,21 @@ const getPrismicLang = (loc) => {
   return 'en-us'
 }
 
-const { data, refresh } = await useAsyncData(
-  `publications-${locale.value}`,
-  () => usePrismic().client.getSingle("publications", { lang: getPrismicLang(locale.value) })
+const { data } = await useLazyAsyncData(
+  'publications',
+  async () => {
+    const lang = getPrismicLang(locale.value)
+    console.log('[Publications.vue] Fetching publications for locale:', locale.value, '| Prismic lang:', lang)
+    const result = await prismic.client.getSingle("publications", { lang })
+    console.log('[Publications.vue] Fetched publications document')
+    return result
+  },
+  {
+    watch: [() => locale.value]
+  }
 );
 
 const publication = computed(() => data.value || null);
-
-// Refresh data when locale changes
-watch(locale, () => {
-  refresh()
-})
 </script>
 
 <style lang="sass" scoped>
@@ -43,12 +48,14 @@ watch(locale, () => {
     :deep(h3)
       text-transform: uppercase
       font-size: .625rem
+      text-shadow: #F0FBE1 0 0 10px
     :deep(p)
       margin-bottom: 2rem
       a
         font-size: 1.5rem
         text-decoration: none
         margin-bottom: .5rem
+        text-shadow: #F0FBE1 0 0 10px
         &:hover
           text-decoration: underline
           text-underline-offset: .15em

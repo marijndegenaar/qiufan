@@ -20,9 +20,9 @@
                   .book-item.cursor-pointer.px-2.py-1.rounded.transition-colors.text-lg(
                     v-for="book in booksByCategory[category]"
                     :key="book.id"
-                    :class="{ 'bg-brown/10 text-brown': selectedBook?.id === book.id }"
+                    :class="{ 'bg-lightsand text-brown': selectedBook?.id === book.id }"
                     @click="selectBook(book)"
-                    class="hover_bg-brown/10 hover_text-brown"
+                    class="hover_bg-lightsand hover_text-brown"
                   )
                     .title.text-md {{ book.data.title }}
           template(v-else)
@@ -42,6 +42,7 @@
 
 <script setup>
 const { locale } = useI18n()
+const prismic = usePrismic()
 
 // Map locale to Prismic language code
 const getPrismicLang = (loc) => {
@@ -49,9 +50,18 @@ const getPrismicLang = (loc) => {
   return 'en-us'
 }
 
-const { data, refresh } = await useAsyncData(
-  `books-${locale.value}`,
-  () => usePrismic().client.getAllByType("books", { lang: getPrismicLang(locale.value) })
+const { data } = await useLazyAsyncData(
+  'books',
+  async () => {
+    const lang = getPrismicLang(locale.value)
+    console.log('[Books.vue] Fetching books for locale:', locale.value, '| Prismic lang:', lang)
+    const result = await prismic.client.getAllByType("books", { lang })
+    console.log('[Books.vue] Fetched', result?.length || 0, 'books')
+    return result
+  },
+  {
+    watch: [() => locale.value]
+  }
 );
 
 const books = computed(() => data.value || []);
@@ -99,10 +109,10 @@ const selectBook = (book) => {
   selectedBook.value = book;
 };
 
-// Refresh data when locale changes
+// Clear selection when locale changes
 watch(locale, () => {
-  refresh()
-  selectedBook.value = null // Clear selection when locale changes
+  console.log('[Books.vue] Locale changed, clearing selection...')
+  selectedBook.value = null
 })
 </script>
 

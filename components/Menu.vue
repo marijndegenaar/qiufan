@@ -49,6 +49,8 @@ const activeSection = ref('hero');
 
 const menuColorClass = computed(() => {
   switch (activeSection.value) {
+    case 'hero':
+      return 'text-white';
     case 'news':
       return 'text-purple';
     case 'publications':

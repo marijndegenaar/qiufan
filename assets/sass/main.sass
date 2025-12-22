@@ -13,16 +13,34 @@ html, body
     //     line-height: 1.1
 
 
-p a 
+p a
     text-decoration: underline
     text-underline-offset: .15em
     text-decoration-thickness: 0.05em
+    transition: all 200ms ease-in-out
     &:hover
       text-decoration: none
 
-a 
+a
     cursor: pointer
-		
+    transition: all 200ms ease-in-out
+
+button, .button, input[type="submit"], input[type="button"]
+    transition: all 200ms ease-in-out
+    cursor: pointer
+    &:hover
+        opacity: 0.8
+        transform: translateY(-1px)
+    &:active
+        transform: translateY(0)
+
+select, input
+    transition: all 200ms ease-in-out
+    &:hover
+        opacity: 0.9
+    &:focus
+        outline-offset: 2px
+
 pre
     background: #111
     color: orange

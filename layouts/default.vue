@@ -4,7 +4,7 @@ Header.fixed.px-2.pt-2.mt-4.z-10
 ClientOnly
   ReactionDiffusion
 News
-Publications
+Publications.p-4
 Books
 Newsletter
 About

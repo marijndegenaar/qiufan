@@ -9,7 +9,7 @@
     </div>
     <canvas ref="canvasRef" class="viewport"></canvas>
 
-    <div class="controls" :class="{ collapsed: controlsCollapsed }">
+    <div class="controls hidden" :class="{ collapsed: controlsCollapsed }">
       <button class="collapse-toggle" @click="toggleControls">{{ controlsCollapsed ? '▶' : '◀' }}</button>
       <h3>Controls</h3>
 

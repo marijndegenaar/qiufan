@@ -3,7 +3,7 @@
     bg="lilac"
     ink="purple"
     shape="circle"
-    :pixel-size="3"
+    :pixel-size="2"
   )
     .flex.flex-col.md_flex-row.gap-8.max-w-7xl.mx-auto.py-24.px-4
       .news-menu.w-full.md_w-1x3
@@ -21,10 +21,10 @@
 
         template(v-if="filteredNews && filteredNews.length")
           .space-y-2
-            .news-item.cursor-pointer.rounded.transition-colors.p-2(
+            .news-item.cursor-pointer.rounded.transition-colors.p-1(
               v-for="item in filteredNews"
               :key="item.id"
-              :class="{ 'bg-purple/10 text-purple': isMounted && selectedNews?.id === item.id }"
+              :class="{ 'bg-lightpurple shadow-lightpurple shadow-xl text-purple': isMounted && selectedNews?.id === item.id }"
               @click="selectNews(item)"
               class="hover_bg-purple hover_text-lilac"
             )
@@ -49,6 +49,7 @@
 
 <script setup>
 const { locale } = useI18n()
+const prismic = usePrismic()
 
 // Map locale to Prismic language code
 const getPrismicLang = (loc) => {
@@ -56,14 +57,17 @@ const getPrismicLang = (loc) => {
   return 'en-us'
 }
 
-const { data, refresh } = await useAsyncData(
-  `news-${locale.value}`,
+const { data } = await useLazyAsyncData(
+  'news',
   async () => {
     const lang = getPrismicLang(locale.value)
     console.log('[News.vue] Fetching news for locale:', locale.value, '| Prismic lang:', lang)
-    const result = await usePrismic().client.getAllByType("news", { lang })
+    const result = await prismic.client.getAllByType("news", { lang })
     console.log('[News.vue] Fetched', result?.length || 0, 'news items')
     return result
+  },
+  {
+    watch: [() => locale.value]
   }
 );
 
@@ -176,12 +180,9 @@ const formatDate = (dateString) => {
   return formatted;
 };
 
-// Refresh data and clear selections when locale changes
-watch(locale, async (newLocale, oldLocale) => {
-  console.log('[News.vue] Locale changed from', oldLocale, 'to', newLocale)
-  console.log('[News.vue] Calling refresh()...')
-  await refresh()
-  console.log('[News.vue] Refresh completed, data.value:', data.value?.length || 0, 'items')
+// Clear selections when locale changes
+watch(locale, () => {
+  console.log('[News.vue] Locale changed, clearing selections...')
   activeCategory.value = 'all'
   selectedNews.value = null
 })
