@@ -9,24 +9,15 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    rollupConfig: {
+      external: [],
+    },
     externals: {
       inline: ['estree-walker']
     },
-    hooks: {
-      'compiled': () => {
-        // Patch estree-walker in the output directory for Vercel
-        const fs = require('fs');
-        const path = require('path');
-        const pkgPath = path.join(process.cwd(), '.output/server/node_modules/estree-walker/package.json');
-
-        if (fs.existsSync(pkgPath)) {
-          const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-          pkg.main = 'src/index.js';
-          if (!pkg.exports['.'].require) pkg.exports['.'].require = './src/index.js';
-          if (!pkg.exports['.'].default) pkg.exports['.'].default = './src/index.js';
-          fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
-        }
-      }
+    moduleSideEffects: ['estree-walker'],
+    commonJS: {
+      include: [/node_modules/],
     }
   },
 

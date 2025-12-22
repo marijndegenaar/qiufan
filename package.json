@@ -6,15 +6,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "preinstall": "echo '{\"name\":\"estree-walker\",\"version\":\"3.0.3\",\"exports\":{\".\":{\"import\":\"./src/index.js\",\"require\":\"./src/index.js\",\"default\":\"./src/index.js\"}},\"main\":\"./src/index.js\",\"module\":\"./src/index.js\",\"types\":\"./types/index.d.ts\"}' > /tmp/estree-walker-patch.json 2>/dev/null || true",
-    "postinstall": "node -e \"try{const fs=require('fs');const path='node_modules/estree-walker/package.json';const pkg=JSON.parse(fs.readFileSync(path,'utf8'));pkg.main='src/index.js';if(!pkg.exports['.'].require)pkg.exports['.'].require='./src/index.js';if(!pkg.exports['.'].default)pkg.exports['.'].default='./src/index.js';fs.writeFileSync(path,JSON.stringify(pkg,null,2))}catch(e){}\" && nuxt prepare",
+    "postinstall": "nuxt prepare",
     "slicemachine": "start-slicemachine"
-  },
-  "resolutions": {
-    "estree-walker": "^3.0.3"
-  },
-  "overrides": {
-    "estree-walker": "^3.0.3"
   },
   "devDependencies": {
     "@hypernym/nuxt-anime": "^2.1.0",
@@ -39,7 +32,6 @@
     "@vueuse/core": "^11.1.0",
     "@yeger/vue-masonry-wall": "^5.0.4",
     "embla-carousel-vue": "^8.6.0",
-    "estree-walker": "^3.0.3",
     "lodash-es": "^4.17.21",
     "sass": "^1.63.6",
     "splitting": "^1.0.6",
