@@ -68,7 +68,8 @@ const { data, refresh } = await useAsyncData(
 );
 
 const news = computed(() => {
-  console.log('[News.vue] News computed triggered, data.value:', data.value?.length || 0, 'items')
+  const isServer = typeof window === 'undefined';
+  console.log(`[News.vue] News computed triggered (${isServer ? 'SERVER' : 'CLIENT'}), data.value:`, data.value?.length || 0, 'items')
   return data.value || []
 });
 
@@ -103,11 +104,13 @@ const activeCategory = ref('all');
 
 // Filtered news based on active category
 const filteredNews = computed(() => {
+  const isServer = typeof window === 'undefined';
   const newsItems = news.value || [];
-  if (activeCategory.value === 'all') {
-    return newsItems;
-  }
-  return newsItems.filter(item => item.data.category === activeCategory.value);
+  const filtered = activeCategory.value === 'all'
+    ? newsItems
+    : newsItems.filter(item => item.data.category === activeCategory.value);
+  console.log(`[News.vue] filteredNews computed (${isServer ? 'SERVER' : 'CLIENT'}):`, filtered.length, 'items, activeCategory:', activeCategory.value);
+  return filtered;
 });
 
 // Selected news item state
@@ -127,9 +130,11 @@ const selectNews = (item) => {
 
 // Auto-select the latest news item after component is mounted (client-side only)
 onMounted(() => {
+  console.log('[News.vue] onMounted called, filteredNews:', filteredNews.value?.length || 0, 'items');
   isMounted.value = true;
   if (filteredNews.value && filteredNews.value.length > 0 && !selectedNews.value) {
     selectedNews.value = filteredNews.value[0];
+    console.log('[News.vue] Auto-selected first news item:', selectedNews.value?.data?.title);
   }
 });
 
@@ -145,13 +150,15 @@ const formatDate = (dateString) => {
   if (!dateString) return '';
 
   const date = new Date(dateString);
+  const isServer = typeof window === 'undefined';
 
+  let formatted;
   if (locale.value === 'cn') {
     // Chinese format: YYYY年MM月DD日 - using UTC to prevent timezone mismatches
     const year = date.getUTCFullYear();
     const month = date.getUTCMonth() + 1;
     const day = date.getUTCDate();
-    return `${year}年${month}月${day}日`;
+    formatted = `${year}年${month}月${day}日`;
   } else {
     // English format: Month DD, YYYY - using UTC to prevent timezone mismatches
     const year = date.getUTCFullYear();
@@ -159,8 +166,14 @@ const formatDate = (dateString) => {
     const day = date.getUTCDate();
     const months = ['January', 'February', 'March', 'April', 'May', 'June',
                     'July', 'August', 'September', 'October', 'November', 'December'];
-    return `${months[month]} ${day}, ${year}`;
+    formatted = `${months[month]} ${day}, ${year}`;
   }
+
+  if (!isServer) {
+    console.log('[News.vue] formatDate (CLIENT):', dateString, '->', formatted);
+  }
+
+  return formatted;
 };
 
 // Refresh data and clear selections when locale changes
