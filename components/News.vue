@@ -43,9 +43,12 @@
             .news-detail.mobile-detail-overlay(
               v-if="selectedNews && showMobileDetail"
               key="mobile"
+              @touchstart="handleTouchStart"
+              @touchmove="handleTouchMove"
+              @touchend="handleTouchEnd"
             )
               //- Back button for mobile
-              button.mb-4.px-3.py-1.rounded-lg.bg-lightpurple.text-sm.transition-colors(
+              button.mb-4.px-3.py-1.rounded-lg.bg-lightpurple.text-sm.transition-colors.mobile-back-button(
                 @click="closeMobileDetail"
                 class="hover_bg-purple hover_text-lilac"
               ) ← {{ locale === 'cn' ? '返回列表' : 'Back to list' }}
@@ -185,6 +188,39 @@ const closeMobileDetail = () => {
   }
 };
 
+// Touch gesture handling for swipe to close
+let touchStartX = 0;
+let touchStartY = 0;
+let touchStartTime = 0;
+
+const handleTouchStart = (e) => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  touchStartTime = Date.now();
+};
+
+const handleTouchMove = (e) => {
+  // Optional: Add visual feedback during swipe
+};
+
+const handleTouchEnd = (e) => {
+  const touchEndX = e.changedTouches[0].clientX;
+  const touchEndY = e.changedTouches[0].clientY;
+  const touchEndTime = Date.now();
+
+  const deltaX = touchEndX - touchStartX;
+  const deltaY = touchEndY - touchStartY;
+  const deltaTime = touchEndTime - touchStartTime;
+
+  // Check if it's a right swipe (left to right)
+  // Must be more horizontal than vertical, move right at least 100px, and be quick enough
+  if (Math.abs(deltaX) > Math.abs(deltaY) &&
+      deltaX > 100 &&
+      deltaTime < 300) {
+    closeMobileDetail();
+  }
+};
+
 // Auto-select the latest news item after component is mounted (client-side only)
 onMounted(() => {
   console.log('[News.vue] onMounted called, filteredNews:', filteredNews.value?.length || 0, 'items');
@@ -261,9 +297,15 @@ onUnmounted(() => {
   right: 0
   bottom: 0
   background: #EBDEFF
-  z-index: 9999 !important
+  z-index: 999 !important
   overflow-y: auto
   padding: 1.5rem
+  padding-top: 3.5rem
+
+.mobile-back-button
+  position: sticky
+  top: 0
+  z-index: 10
 
 // Slide-in transition - only on mobile
 .slide-in-enter-active,
@@ -282,4 +324,13 @@ onUnmounted(() => {
 .slide-in-leave-from
   transform: translateX(0)
   opacity: 1
+</style>
+
+<style>
+/* Global style to ensure menu button stays above overlay */
+#mobile_menu,
+.menu-wrapper,
+#menu-wrap {
+  z-index: 10000 !important;
+}
 </style>
