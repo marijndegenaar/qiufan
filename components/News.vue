@@ -11,10 +11,10 @@
 
         //- Category tabs
         .category-tabs.flex.gap-2.mb-4.flex-wrap
-          button.px-2.py-1.rounded-lg.text-sm.transition-colors.leading-none(
+          button.px-2.py-1.rounded-lg.text-sm.transition-colors.leading-none.uppercase(
             v-for="cat in categories"
             :key="cat.value"
-            :class="{ 'bg-lightpurple text-purple font-semibold': activeCategory === cat.value, 'bg-white bg-opacity-20': activeCategory !== cat.value }"
+            :class="{ 'bg-purple text-lilac': activeCategory === cat.value, 'bg-lightpurple': activeCategory !== cat.value }"
             @click="setCategory(cat.value)"
             class="hover_bg-lightpurple hover_text-purple"
           ) {{ cat.label }}
@@ -24,11 +24,13 @@
             .news-item.cursor-pointer.rounded.transition-colors.p-1(
               v-for="item in filteredNews"
               :key="item.id"
-              :class="{ 'bg-lightpurple shadow-lightpurple shadow-xl text-purple': isMounted && selectedNews?.id === item.id }"
+              :class="{ 'bg-lightpurple shadow-lightpurple shadow-lg text-purple': isMounted && selectedNews?.id === item.id }"
               @click="selectNews(item)"
-              class="hover_bg-purple hover_text-lilac"
+              class="hover_shadow-xl hover_shadow-lightpurple hover_text-shadow-lg"
             )
-              .meta.text-sm {{ formatDate(item.first_publication_date) }} — {{ item.data.subtitle }}
+              .meta.text-sm 
+                | {{ formatDate(item.first_publication_date) }} — {{ item.data.subtitle }}
+                span.category.text-xs.ml-2.px-1.bg-lilac.rounded.uppercase {{ item.data.category }}
               .title.text-md {{ item.data.title }}
         template(v-else)
           p.text-sm {{ locale === 'cn' ? '没有找到新闻' : 'No news items found.' }}
@@ -36,7 +38,7 @@
       ClientOnly
         .news-detail.w-full.md_w-1x2(v-if="selectedNews")
           .overflow-hidden
-            PrismicImage.w-full.md_w-1x2(
+            PrismicImage.w-full.md_w-1x2.shadow-lightpurple.shadow-xl(
               v-if="selectedNews.data.featured_image?.url"
               :field="selectedNews.data.featured_image"
             )

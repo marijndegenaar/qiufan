@@ -57,6 +57,8 @@ const menuColorClass = computed(() => {
       return 'text-green';
     case 'books':
       return 'text-brown';
+    case 'About':
+      return 'text-purple';
     default:
       return 'text-white';
   }
@@ -74,7 +76,7 @@ const scrollToSection = (sectionId) => {
 const updateActiveSection = () => {
   if (!process.client) return;
 
-  const sections = ['hero', 'news', 'publications', 'books'];
+  const sections = ['hero', 'news', 'publications', 'books', 'About'];
   // Check when section is near the top of viewport (10% down)
   const checkPoint = window.scrollY + window.innerHeight * 0.1;
 

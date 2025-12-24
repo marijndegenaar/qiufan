@@ -1,5 +1,5 @@
 <template lang="pug">
-Header.fixed.px-2.pt-2.mt-4
+Header
 #hero
   ClientOnly
     ReactionDiffusion

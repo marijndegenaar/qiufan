@@ -4,10 +4,10 @@
 	.menu-wrapper.fixed.top-2.right-2(:class="{ 'blend-mode': activeSection === 'hero', 'elevated': activeSection !== 'hero' }")
 		Menu.text-sm(@update:activeSection="updateActiveSection")
 
-.locale-select.p-2.fixed.bottom-2.blend-mode
-	select(v-model="currentLocale" @change="switchLocale")
-		option(value="en") EN
-		option(value="cn") CN
+	.locale-select.p-2.fixed.bottom-2.blend-mode
+		select(v-model="currentLocale" @change="switchLocale")
+			option(value="en") EN
+			option(value="cn") CN
 </template>
 
 <script setup>
