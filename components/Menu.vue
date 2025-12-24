@@ -158,7 +158,7 @@ a.active span
 
 @media (max-width: 767px)
   #menu
-    font-size: 3rem
+    font-size: 2.5rem
   .menu-items
     a
       span
