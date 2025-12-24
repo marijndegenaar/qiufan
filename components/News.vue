@@ -37,30 +37,31 @@
           p.text-sm {{ locale === 'cn' ? '没有找到新闻' : 'No news items found.' }}
 
       ClientOnly
-        //- Mobile overlay detail view (slides in)
-        Transition(name="slide-in")
-          .news-detail.mobile-detail-overlay(
-            v-if="selectedNews && showMobileDetail"
-            key="mobile"
-          )
-            //- Back button for mobile
-            button.mb-4.px-3.py-1.rounded-lg.bg-lightpurple.text-sm.transition-colors(
-              @click="closeMobileDetail"
-              class="hover_bg-purple hover_text-lilac"
-            ) ← {{ locale === 'cn' ? '返回列表' : 'Back to list' }}
+        //- Mobile overlay detail view (slides in) - teleported to body to escape stacking context
+        Teleport(to="body")
+          Transition(name="slide-in")
+            .news-detail.mobile-detail-overlay(
+              v-if="selectedNews && showMobileDetail"
+              key="mobile"
+            )
+              //- Back button for mobile
+              button.mb-4.px-3.py-1.rounded-lg.bg-lightpurple.text-sm.transition-colors(
+                @click="closeMobileDetail"
+                class="hover_bg-purple hover_text-lilac"
+              ) ← {{ locale === 'cn' ? '返回列表' : 'Back to list' }}
 
-            .overflow-hidden
-              PrismicImage.w-full.shadow-lightpurple.shadow-xl(
-                v-if="selectedNews.data.featured_image?.url"
-                :field="selectedNews.data.featured_image"
-              )
-              .content.mt-2
-                .meta.text-sm
-                  | {{ formatDate(selectedNews.first_publication_date) }} — {{ selectedNews.data.subtitle }}
-                  span.category.bg-lightpurple.ml-2.rounded.px-1 {{ selectedNews.data.category }}
-                h2.text-lg.mb-2 {{ selectedNews.data.title }}
-                .news-content(v-if="selectedNews.data.description")
-                  PrismicRichText(:field="selectedNews.data.description")
+              .overflow-hidden
+                PrismicImage.w-full.shadow-lightpurple.shadow-xl(
+                  v-if="selectedNews.data.featured_image?.url"
+                  :field="selectedNews.data.featured_image"
+                )
+                .content.mt-2
+                  .meta.text-sm
+                    | {{ formatDate(selectedNews.first_publication_date) }} — {{ selectedNews.data.subtitle }}
+                    span.category.bg-lightpurple.ml-2.rounded.px-1 {{ selectedNews.data.category }}
+                  h2.text-lg.mb-2 {{ selectedNews.data.title }}
+                  .news-content(v-if="selectedNews.data.description")
+                    PrismicRichText(:field="selectedNews.data.description")
 
         //- Desktop sidebar detail view (always visible on desktop)
         .news-detail.hidden.md_block.w-full.md_w-1x2(
@@ -260,7 +261,7 @@ onUnmounted(() => {
   right: 0
   bottom: 0
   background: #EBDEFF
-  z-index: 9999
+  z-index: 9999 !important
   overflow-y: auto
   padding: 1.5rem
 
