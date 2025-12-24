@@ -162,15 +162,15 @@ export class ReactionDiffusionCompute {
         const now = new Date();
 
         if (this.aspect > 1.4) {
-            const text = 'Quifan Chen';
+            const text = 'Chen Qiufan';
             const textWidth = ctx.measureText(text).width;
             ctx.fillText(text,
                 - textWidth / 2,
                 + this.letterHeight * .5);
         } else {
             const lineHeight = 1.25;
-            const text1 = 'Quifan';
-            const text2 = 'Chen';
+            const text1 = 'Chen';
+            const text2 = 'Qiufan';
             const textWidth1 = ctx.measureText(text1).width;
             const textWidth2 = ctx.measureText(text2).width;
             const y = - this.letterHeight * .5 + (this.letterHeight * (1 - lineHeight));

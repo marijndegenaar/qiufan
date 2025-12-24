@@ -1,5 +1,10 @@
 <template lang="pug">
-  #About.bg-grey.text-purple.px-2.py-16
+  ShaderBackground#About.text-purple.px-2.py-16(
+    bg="lilac"
+    ink="purple"
+    shape="circle"
+    :pixel-size="2"
+  )
     .w-full.flex(v-if="about")
       .feature-image.w-full.md_w-1x3.mr-8
         PrismicImage.shadow-lightpurple.shadow-xl(

@@ -219,7 +219,7 @@ void main() {
     /* ====================================================== */
 
     vec3 color = uColor;
-    fragColor = vec4(color, M * 0.5);
+    fragColor = vec4(color, M * 0.8);
 }
 `;
 

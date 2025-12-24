@@ -1,10 +1,10 @@
 <template lang="pug">
 #header
 	//- h1.logo.fixed.top-2.left-2 Chen Qiufan
-	.menu-wrapper.fixed.top-2.right-2
-		Menu.text-sm
+	.menu-wrapper.fixed.top-2.right-2(:class="{ 'blend-mode': activeSection === 'hero', 'elevated': activeSection !== 'hero' }")
+		Menu.text-sm(@update:activeSection="updateActiveSection")
 
-.locale-select.p-2.fixed.bottom-2
+.locale-select.p-2.fixed.bottom-2.blend-mode
 	select(v-model="currentLocale" @change="switchLocale")
 		option(value="en") EN
 		option(value="cn") CN
@@ -14,9 +14,14 @@
 const { locale, setLocale } = useI18n()
 
 const currentLocale = ref(locale.value)
+const activeSection = ref('hero')
 
 const switchLocale = async () => {
   await setLocale(currentLocale.value)
+}
+
+const updateActiveSection = (section) => {
+  activeSection.value = section
 }
 
 // Watch for external locale changes
@@ -28,14 +33,16 @@ watch(locale, (newLocale) => {
 <style lang="sass" scoped>
 #header
   position: relative
-  z-index: 1000
+
+.blend-mode
+  mix-blend-mode: difference
 
 .menu-wrapper
-  mix-blend-mode: difference
+  transition: mix-blend-mode 0.3s ease
 
 .locale-select
-  mix-blend-mode: difference
-  z-index: 1000
+  z-index: 100
+  transition: mix-blend-mode 0.3s ease
 
   select
     background: none
@@ -50,4 +57,7 @@ watch(locale, (newLocale) => {
     option
       background: none
       color: white
+
+.elevated
+  z-index: 100
 </style>

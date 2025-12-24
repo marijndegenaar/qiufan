@@ -163,7 +163,7 @@ fn frag_main(@location(0) uv : vec2f) -> @location(0) vec4f {
 
     // inner emboss effect
     var emboss1: vec4f = emboss(p, vec4(1., 0., 0., 0.), input, inputTex, inputTexSampler, inputTexelSize, .5, .4 + dist * .3);
-    emboss1.w = emboss1.w * .3 * (animationUniforms.pulse * animationUniforms.pulseIntensity + (1.0 - animationUniforms.pulseIntensity / 2.0));
+    emboss1.w = emboss1.w * .8 * (animationUniforms.pulse * animationUniforms.pulseIntensity + (1.0 - animationUniforms.pulseIntensity / 2.0));
 
     // inner specular from emboss data
     let specular = smoothstep(0.2, 0.3, 2.0 * emboss1.x - emboss1.y - emboss1.z) * .5 * (1. - dist) * ((1. - animationUniforms.pulse) * animationUniforms.pulseIntensity + (1.0 - animationUniforms.pulseIntensity / 2.0));

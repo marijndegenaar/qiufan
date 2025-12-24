@@ -42,7 +42,7 @@ const menuItems = computed(() => {
   ]
 });
 
-defineEmits(['menuHover'])
+const emit = defineEmits(['menuHover', 'update:activeSection'])
 
 const isMobileMenuVisible = ref(false);
 const activeSection = ref('hero');
@@ -75,13 +75,19 @@ const updateActiveSection = () => {
   if (!process.client) return;
 
   const sections = ['hero', 'news', 'publications', 'books'];
-  const scrollPosition = window.scrollY + window.innerHeight / 3;
+  // Check when section is near the top of viewport (10% down)
+  const checkPoint = window.scrollY + window.innerHeight * 0.1;
 
+  // Loop through sections from bottom to top
   for (let i = sections.length - 1; i >= 0; i--) {
     const element = document.getElementById(sections[i]);
-    if (element && element.offsetTop <= scrollPosition) {
-      activeSection.value = sections[i];
-      break;
+    if (element) {
+      // If the section's top has passed our checkpoint, it's active
+      if (element.offsetTop <= checkPoint) {
+        activeSection.value = sections[i];
+        emit('update:activeSection', sections[i]);
+        break;
+      }
     }
   }
 };

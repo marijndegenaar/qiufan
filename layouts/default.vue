@@ -1,8 +1,8 @@
 <template lang="pug">
-Header.fixed.px-2.pt-2.mt-4.z-10
-//- Hero
-ClientOnly
-  ReactionDiffusion
+Header.fixed.px-2.pt-2.mt-4
+#hero
+  ClientOnly
+    ReactionDiffusion
 News
 Publications.p-4
 Books

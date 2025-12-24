@@ -14,9 +14,9 @@
           button.px-2.py-1.rounded-lg.text-sm.transition-colors.leading-none(
             v-for="cat in categories"
             :key="cat.value"
-            :class="{ 'bg-purple/10 text-purple font-semibold': activeCategory === cat.value, 'bg-white bg-opacity-20': activeCategory !== cat.value }"
+            :class="{ 'bg-lightpurple text-purple font-semibold': activeCategory === cat.value, 'bg-white bg-opacity-20': activeCategory !== cat.value }"
             @click="setCategory(cat.value)"
-            class="hover_bg-purple hover_text-lilac"
+            class="hover_bg-lightpurple hover_text-purple"
           ) {{ cat.label }}
 
         template(v-if="filteredNews && filteredNews.length")
@@ -41,7 +41,9 @@
               :field="selectedNews.data.featured_image"
             )
             .content.mt-2
-              .meta.text-sm {{ formatDate(selectedNews.first_publication_date) }} — {{ selectedNews.data.subtitle }}
+              .meta.text-sm
+                | {{ formatDate(selectedNews.first_publication_date) }} — {{ selectedNews.data.subtitle }}
+                span.category.bg-lightpurple.ml-2.rounded.px-1 {{ selectedNews.data.category }}
               h2.text-lg.mb-2 {{ selectedNews.data.title }}
               .news-content(v-if="selectedNews.data.description")
                 PrismicRichText(:field="selectedNews.data.description")
