@@ -2,7 +2,7 @@
 #header
 	h1.logo.fixed.top-2.left-2(:class="[{ 'blend-mode': activeSection === 'hero', 'elevated': activeSection !== 'hero' }, logoColorClass]") Chen Qiufan
 	.menu-wrapper.fixed.top-2.right-2(:class="{ 'blend-mode': activeSection === 'hero', 'elevated': activeSection !== 'hero' }")
-		Menu.text-sm(@update:activeSection="updateActiveSection")
+		Menu(@update:activeSection="updateActiveSection")
 
 	.locale-select.fixed.left-2.bottom-2.blend-mode
 		select(v-model="currentLocale" @change="switchLocale")

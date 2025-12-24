@@ -1,8 +1,8 @@
 <template lang="pug">
 #menu-wrap
-  #mobile_menu.right-1.fixed.text-sm(v-if="isMobileMenuVisible" @click="toggleMenu") ++
+  #mobile_menu.right-1.fixed(v-if="isMobileMenuVisible" @click="toggleMenu") MENU
   #menu(v-if="!isMobileMenuVisible" :class="menuColorClass")
-    .menu-items.flex-col.flex.md_block
+    .menu-items.flex-col.flex.md_block.text-right
       a.cursor-pointer(
         v-for="item in menuItems"
         :key="item.section"
@@ -35,10 +35,10 @@ const menuLabels = {
 const menuItems = computed(() => {
   const labels = menuLabels[locale.value] || menuLabels.en
   return [
-    { name: labels.info, section: "hero" },
     { name: labels.news, section: "news" },
     { name: labels.publications, section: "publications" },
     { name: labels.books, section: "books" },
+    { name: labels.info, section: "About" },
   ]
 });
 
@@ -138,8 +138,6 @@ a.active span
   .menu-items
     a
       span
-          background: #fff
-          border-radius: .4em
-          padding: 0 0.2em
+
 
 </style>
