@@ -22,17 +22,17 @@
 
         template(v-if="filteredNews && filteredNews.length")
           .news-list.space-y-2
-            .news-item.cursor-pointer.rounded.transition-colors.p-1(
+            .news-item.cursor-pointer.rounded.transition-colors.p-1.mb-8(
               v-for="item in filteredNews"
               :key="item.id"
-              :class="{ 'bg-lightpurple shadow-lightpurple shadow-lg text-purple': isMounted && selectedNews?.id === item.id }"
+              :class="{ 'md_bg-lightpurple md_shadow-lightpurple md_shadow-lg md_text-purple': isMounted && selectedNews?.id === item.id }"
               @click="selectNews(item)"
-              class="hover_shadow-xl hover_shadow-lightpurple hover_text-shadow-lg"
+              class="md_hover_shadow-xl md_hover_shadow-lightpurple md_hover_text-shadow-lg"
             )
               .meta.text-sm
                 | {{ formatDate(item.first_publication_date) }} — {{ item.data.subtitle }}
-                span.category.text-xs.ml-2.px-1.bg-lilac.rounded.uppercase {{ item.data.category }}
-              .title.text-md {{ item.data.title }}
+                span.category.text-xs.ml-2.px-1.bg-lightpurple.rounded.uppercase {{ item.data.category }}
+              .title.text-xl.md_text-md.leading-none {{ item.data.title }}
         template(v-else)
           p.text-sm {{ locale === 'cn' ? '没有找到新闻' : 'No news items found.' }}
 
@@ -48,10 +48,10 @@
               @touchend="handleTouchEnd"
             )
               //- Back button for mobile
-              button.mb-4.px-3.py-1.rounded-lg.bg-lightpurple.text-sm.transition-colors.mobile-back-button(
+              button.mb-4.px-2.py-1.rounded-lg.bg-lightpurple.text-purple.text-sm.transition-colors.mobile-back-button(
                 @click="closeMobileDetail"
-                class="hover_bg-purple hover_text-lilac"
-              ) ← {{ locale === 'cn' ? '返回列表' : 'Back to list' }}
+                class="md_hover_bg-purple md_hover_text-lilac"
+              ) ← {{ locale === 'cn' ? '返回列表' : 'BACK TO LIST' }}
 
               .overflow-hidden
                 PrismicImage.w-full.shadow-lightpurple.shadow-xl(
@@ -61,8 +61,8 @@
                 .content.mt-2
                   .meta.text-sm
                     | {{ formatDate(selectedNews.first_publication_date) }} — {{ selectedNews.data.subtitle }}
-                    span.category.bg-lightpurple.ml-2.rounded.px-1 {{ selectedNews.data.category }}
-                  h2.text-lg.mb-2 {{ selectedNews.data.title }}
+                    span.category.bg-lightpurple.ml-2.rounded.px-1.uppercase {{ selectedNews.data.category }}
+                  h2.text-xl.md_text-lg.mb-2.leading-none.text-purple {{ selectedNews.data.title }}
                   .news-content(v-if="selectedNews.data.description")
                     PrismicRichText(:field="selectedNews.data.description")
 
@@ -296,11 +296,11 @@ onUnmounted(() => {
   left: 0
   right: 0
   bottom: 0
-  background: #EBDEFF
+  background: #e9dffd
   z-index: 999 !important
   overflow-y: auto
-  padding: 1.5rem
-  padding-top: 3.5rem
+  padding: 1rem
+  padding-top: .5rem
 
 .mobile-back-button
   position: sticky

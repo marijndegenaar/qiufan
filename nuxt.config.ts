@@ -4,8 +4,16 @@ import pugPlugin from "vite-plugin-pug";
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  devServer: {
+    host: '0.0.0.0',
+    port: 3000,
+  },
+
   vite: {
     plugins: [pugPlugin()],
+    server: {
+      host: '0.0.0.0',
+    },
   },
 
   nitro: {
@@ -27,7 +35,7 @@ export default defineNuxtConfig({
     head: {
       title: 'Chen Qiufan',
       charset: 'utf-8',
-      viewport: 'width=device-width, minimal-ui initial-scale=1, user-scalable=no',
+      viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no',
       link: [{ rel: 'icon', type: 'image/png', href: '/fav.png' }],
       meta: [
         { hid: 'description', name: 'description', content: '' },

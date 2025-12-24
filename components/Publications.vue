@@ -53,22 +53,26 @@ const publication = computed(() => data.value || null);
       margin-bottom: 2rem
       a
         font-size: 1.5rem
+        @media (max-width: 768px)
+          font-size: 2rem
+          line-height: 1.2
         text-decoration: none
         margin-bottom: .5em
         text-shadow: #F0FBE1 0 0 10px
         display: inline-block
-        &:hover
-          text-decoration: underline
-          text-underline-offset: .15em
-          text-decoration-thickness: 0.06em
-          &::after
-            content: "↗︎\00a0"attr(href)""
-            font-size: 0.4em
-            margin-left: 1em
-            text-decoration: none
-            display: inline-block
-            position: absolute
-            margin-top: 0.5em
-            max-width: 33.333%
-            word-wrap: break-word
+        @media (min-width: 769px)
+          &:hover
+            text-decoration: underline
+            text-underline-offset: .15em
+            text-decoration-thickness: 0.06em
+            &::after
+              content: "↗︎\00a0"attr(href)""
+              font-size: 0.4em
+              margin-left: 1em
+              text-decoration: none
+              display: inline-block
+              position: absolute
+              margin-top: 0.5em
+              max-width: 33.333%
+              word-wrap: break-word
 </style>
