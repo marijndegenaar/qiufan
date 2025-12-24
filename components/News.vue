@@ -63,7 +63,7 @@
                     | {{ formatDate(selectedNews.first_publication_date) }} — {{ selectedNews.data.subtitle }}
                     span.category.bg-lightpurple.ml-2.rounded.px-1.uppercase {{ selectedNews.data.category }}
                   h2.text-xl.md_text-lg.mb-2.leading-none.text-purple {{ selectedNews.data.title }}
-                  .news-content(v-if="selectedNews.data.description")
+                  .news-content.text-purple(v-if="selectedNews.data.description")
                     PrismicRichText(:field="selectedNews.data.description")
 
         //- Desktop sidebar detail view (always visible on desktop)

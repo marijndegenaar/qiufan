@@ -131,10 +131,11 @@ a.active span
   border-bottom: 2px solid currentColor
 
 #menu
-  font-size: 1.5rem
+  font-size: 2rem
   transition: color 0.3s ease
 
 @media (max-width: 767px)
+  #font-size: 1.5rem
   .menu-items
     a
       span
