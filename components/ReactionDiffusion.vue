@@ -1,5 +1,5 @@
 <template>
-  <div class="reaction-diffusion-container">
+  <div class="reaction-diffusion-container" ref="containerRef" :style="{ height: fixedHeight }">
     <div v-if="!hasWebGPU" class="no-webgpu">
       <p>
         You are using a browser that does not support WebGPU.
@@ -8,10 +8,6 @@
       </p>
     </div>
     <canvas ref="canvasRef" class="viewport"></canvas>
-
-    <div class="debug-overlay" v-if="debugInfo.show">
-      <div v-for="(msg, i) in debugInfo.messages" :key="i">{{ msg }}</div>
-    </div>
 
     <div class="controls hidden" :class="{ collapsed: controlsCollapsed }">
       <button class="collapse-toggle" @click="toggleControls">{{ controlsCollapsed ? '▶' : '◀' }}</button>
@@ -61,10 +57,8 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 const canvasRef = ref(null)
 const hasWebGPU = ref(true)
 const controlsCollapsed = ref(true)
-const debugInfo = ref({
-  show: true,
-  messages: []
-})
+const containerRef = ref(null)
+const fixedHeight = ref(null)
 
 // Control parameters
 const controls = ref({
@@ -219,15 +213,7 @@ const init = async () => {
     const { ReactionDiffusionCompute } = await import('~/utils/webgpu/rd-compute.js')
     const { Composite } = await import('~/utils/webgpu/composite.js')
 
-    // Debug callback
-    const addDebugMessage = (msg) => {
-      debugInfo.value.messages.push(msg)
-      if (debugInfo.value.messages.length > 8) {
-        debugInfo.value.messages.shift()
-      }
-    }
-
-    reactionDiffusion = new ReactionDiffusionCompute(device, viewportSize, addDebugMessage)
+    reactionDiffusion = new ReactionDiffusionCompute(device, viewportSize)
     composite = new Composite(device, reactionDiffusion)
 
     // Setup resize observer
@@ -242,6 +228,9 @@ const init = async () => {
 }
 
 onMounted(async () => {
+  // Fix the height on page load to prevent resize blinking
+  fixedHeight.value = `${window.innerHeight}px`
+
   // Load the font before initializing
   try {
     const font = new FontFace('BugrinoTrials-Light', 'url(/assets/BugrinoTrials-Light.otf)')
@@ -268,14 +257,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .reaction-diffusion-container {
   width: 100vw;
-  height: 100dvh;
   overflow: hidden;
-}
-
-@supports not (height: 100dvh) {
-  .reaction-diffusion-container {
-    height: 100vh;
-  }
 }
 
 .viewport {
@@ -305,25 +287,6 @@ onBeforeUnmount(() => {
 .no-webgpu a {
   color: #0066cc;
   text-decoration: underline;
-}
-
-.debug-overlay {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #0f0;
-  padding: 10px;
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 11px;
-  z-index: 1000;
-  max-width: 90vw;
-  word-break: break-word;
-}
-
-.debug-overlay div {
-  margin: 2px 0;
 }
 
 .controls {

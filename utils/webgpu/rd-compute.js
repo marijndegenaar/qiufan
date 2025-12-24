@@ -17,17 +17,8 @@ export class ReactionDiffusionCompute {
         followerVelocity: [0, 0]
     };
 
-    // gyroscope data for mobile
-    gyro = {
-        enabled: false,
-        alpha: 0,
-        beta: 0,
-        gamma: 0
-    };
-
-    constructor(device, viewportSize, debugCallback = null) {
+    constructor(device, viewportSize) {
         this.device = device;
-        this.debugCallback = debugCallback;
 
         // create pipeline and bind group layouts
         const module = this.device.createShaderModule({ code: ReactionDiffusionComputeShader });
@@ -82,90 +73,6 @@ export class ReactionDiffusionCompute {
         document.body.addEventListener('pointermove', e => {
             this.pointer.position = this.getNormalizedPointerCoords(e.clientX, e.clientY);
             if (!this.pointer.followerPosition) this.pointer.followerPosition = [...this.pointer.position];
-        });
-
-        // Initialize gyroscope for mobile
-        this.initGyroscope();
-    }
-
-    log(message) {
-        console.log(message);
-        if (this.debugCallback) {
-            this.debugCallback(message);
-        }
-    }
-
-    initGyroscope() {
-        // Check if DeviceOrientationEvent is supported
-        if (typeof DeviceOrientationEvent === 'undefined') {
-            this.log('DeviceOrientationEvent not supported');
-            return;
-        }
-
-        this.log('Initializing gyroscope...');
-
-        // iOS 13+ requires permission
-        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-            this.log('iOS 13+ detected - tap screen for permission');
-            document.body.addEventListener('click', async () => {
-                if (!this.gyro.enabled) {
-                    this.log('Requesting gyroscope permission...');
-                    try {
-                        const permission = await DeviceOrientationEvent.requestPermission();
-                        this.log(`Permission: ${permission}`);
-                        if (permission === 'granted') {
-                            this.enableGyroscope();
-                        }
-                    } catch (error) {
-                        this.log(`Permission denied: ${error.message}`);
-                    }
-                }
-            }, { once: true });
-        } else {
-            // Android and older iOS - no permission needed
-            this.log('Android/older iOS - enabling gyroscope');
-            this.enableGyroscope();
-        }
-    }
-
-    enableGyroscope() {
-        this.log('Gyroscope enabled - listening...');
-        let logCount = 0;
-
-        window.addEventListener('deviceorientation', (event) => {
-            if (event.gamma === null || event.beta === null) {
-                if (logCount === 0) {
-                    this.log('Orientation event: gamma/beta null');
-                    logCount++;
-                }
-                return;
-            }
-
-            if (!this.gyro.enabled) {
-                this.log('First gyroscope reading received!');
-            }
-
-            this.gyro.enabled = true;
-            this.gyro.alpha = event.alpha || 0;
-            this.gyro.beta = event.beta || 0;
-            this.gyro.gamma = event.gamma || 0;
-
-            // Convert gyroscope to normalized coords (-1 to 1)
-            // gamma: left-right tilt (-90 to 90)
-            // beta: front-back tilt (-180 to 180)
-            const x = Math.max(-1, Math.min(1, this.gyro.gamma / 45));
-            const y = Math.max(-1, Math.min(1, (this.gyro.beta - 90) / 45));
-
-            // Log first few readings for debugging
-            if (logCount < 5) {
-                this.log(`γ=${this.gyro.gamma.toFixed(0)}° β=${this.gyro.beta.toFixed(0)}° → x=${x.toFixed(2)} y=${y.toFixed(2)}`);
-                logCount++;
-            }
-
-            this.pointer.position = [x, y];
-            if (!this.pointer.followerPosition) {
-                this.pointer.followerPosition = [...this.pointer.position];
-            }
         });
     }
 
