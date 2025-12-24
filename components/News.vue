@@ -6,30 +6,22 @@
     :pixel-size="2"
   )
     .flex.flex-col.md_flex-row.gap-8.max-w-7xl.mx-auto.py-24.px-2.md_px-4
-      .news-menu.w-full.md_w-1x3
-        //- h1.text-xl.font-bold.mb-4 {{ locale === 'cn' ? '新闻' : 'News' }}
-
-        //- Category tabs and toggle button
-        .flex.items-center.justify-between.mb-4.gap-2
-          .category-tabs.flex.gap-2.flex-wrap.flex-1
-            button.px-2.py-1.rounded-lg.text-sm.transition-colors.leading-none.uppercase(
-              v-for="cat in categories"
-              :key="cat.value"
-              :class="{ 'bg-purple text-lilac': activeCategory === cat.value, 'bg-lightpurple': activeCategory !== cat.value }"
-              @click="setCategory(cat.value)"
-              class="hover_bg-lightpurple hover_text-purple"
-            ) {{ cat.label }}
-
-          //- Mobile toggle button
-          button.md_hidden.px-2.py-1.rounded-lg.bg-lightpurple.text-sm.transition-colors.shrink-0(
-            @click="toggleNewsMenu"
-            class="hover_bg-purple hover_text-lilac"
-          ) {{ isNewsMenuOpen ? '▲' : '▼' }}
+      .news-menu.w-full.md_w-1x3(
+        :class="{ 'hidden': selectedNews && showMobileDetail }"
+        class="md_block"
+      )
+        //- Category tabs
+        .category-tabs.flex.gap-2.mb-4.flex-wrap
+          button.px-2.py-1.rounded-lg.text-sm.transition-colors.leading-none.uppercase(
+            v-for="cat in categories"
+            :key="cat.value"
+            :class="{ 'bg-purple text-lilac': activeCategory === cat.value, 'bg-lightpurple': activeCategory !== cat.value }"
+            @click="setCategory(cat.value)"
+            class="hover_bg-lightpurple hover_text-purple"
+          ) {{ cat.label }}
 
         template(v-if="filteredNews && filteredNews.length")
-          .news-list.space-y-2(
-            :class="{ 'hidden md_block': !isNewsMenuOpen }"
-          )
+          .news-list.space-y-2
             .news-item.cursor-pointer.rounded.transition-colors.p-1(
               v-for="item in filteredNews"
               :key="item.id"
@@ -45,7 +37,35 @@
           p.text-sm {{ locale === 'cn' ? '没有找到新闻' : 'No news items found.' }}
 
       ClientOnly
-        .news-detail.w-full.md_w-1x2(v-if="selectedNews")
+        //- Mobile overlay detail view (slides in)
+        Transition(name="slide-in")
+          .news-detail.mobile-detail-overlay(
+            v-if="selectedNews && showMobileDetail"
+            key="mobile"
+          )
+            //- Back button for mobile
+            button.mb-4.px-3.py-1.rounded-lg.bg-lightpurple.text-sm.transition-colors(
+              @click="closeMobileDetail"
+              class="hover_bg-purple hover_text-lilac"
+            ) ← {{ locale === 'cn' ? '返回列表' : 'Back to list' }}
+
+            .overflow-hidden
+              PrismicImage.w-full.shadow-lightpurple.shadow-xl(
+                v-if="selectedNews.data.featured_image?.url"
+                :field="selectedNews.data.featured_image"
+              )
+              .content.mt-2
+                .meta.text-sm
+                  | {{ formatDate(selectedNews.first_publication_date) }} — {{ selectedNews.data.subtitle }}
+                  span.category.bg-lightpurple.ml-2.rounded.px-1 {{ selectedNews.data.category }}
+                h2.text-lg.mb-2 {{ selectedNews.data.title }}
+                .news-content(v-if="selectedNews.data.description")
+                  PrismicRichText(:field="selectedNews.data.description")
+
+        //- Desktop sidebar detail view (always visible on desktop)
+        .news-detail.hidden.md_block.w-full.md_w-1x2(
+          v-if="selectedNews"
+        )
           .overflow-hidden
             PrismicImage.w-full.md_w-1x2.shadow-lightpurple.shadow-xl(
               v-if="selectedNews.data.featured_image?.url"
@@ -134,27 +154,34 @@ const filteredNews = computed(() => {
 const selectedNews = ref(null);
 const isMounted = ref(false);
 
-// Mobile menu toggle state
-const isNewsMenuOpen = ref(false);
+// Mobile detail view state
+const showMobileDetail = ref(false);
 
 // Function to set active category
 const setCategory = (category) => {
   activeCategory.value = category;
   selectedNews.value = null; // Clear selection when category changes
+  showMobileDetail.value = false; // Return to list view on mobile
 };
 
 // Function to select a news item
 const selectNews = (item) => {
   selectedNews.value = item;
-  // On mobile, close the menu after selecting an item
+  // On mobile, show the detail view
   if (typeof window !== 'undefined' && window.innerWidth < 768) {
-    isNewsMenuOpen.value = false;
+    showMobileDetail.value = true;
+    // Disable body scroll when overlay is open
+    document.body.style.overflow = 'hidden';
   }
 };
 
-// Function to toggle news menu on mobile
-const toggleNewsMenu = () => {
-  isNewsMenuOpen.value = !isNewsMenuOpen.value;
+// Function to close mobile detail view and return to list
+const closeMobileDetail = () => {
+  showMobileDetail.value = false;
+  // Re-enable body scroll when overlay is closed
+  if (typeof window !== 'undefined') {
+    document.body.style.overflow = '';
+  }
 };
 
 // Auto-select the latest news item after component is mounted (client-side only)
@@ -210,9 +237,48 @@ watch(locale, () => {
   console.log('[News.vue] Locale changed, clearing selections...')
   activeCategory.value = 'all'
   selectedNews.value = null
+  showMobileDetail.value = false
+  if (typeof window !== 'undefined') {
+    document.body.style.overflow = ''
+  }
+})
+
+// Cleanup on unmount
+onUnmounted(() => {
+  if (typeof window !== 'undefined') {
+    document.body.style.overflow = ''
+  }
 })
 </script>
 
 <style lang="sass" scoped>
+// Mobile detail overlay styles - only on mobile
+.mobile-detail-overlay
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background: #EBDEFF
+  z-index: 9999
+  overflow-y: auto
+  padding: 1.5rem
 
+// Slide-in transition - only on mobile
+.slide-in-enter-active,
+.slide-in-leave-active
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out
+
+.slide-in-enter-from
+  transform: translateX(100%)
+  opacity: 0
+
+.slide-in-leave-to
+  transform: translateX(100%)
+  opacity: 0
+
+.slide-in-enter-to,
+.slide-in-leave-from
+  transform: translateX(0)
+  opacity: 1
 </style>
