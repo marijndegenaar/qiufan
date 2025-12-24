@@ -1,10 +1,10 @@
 <template lang="pug">
 #header
-	//- h1.logo.fixed.top-2.left-2 Chen Qiufan
+	h1.logo.fixed.top-2.left-2(:class="[{ 'blend-mode': activeSection === 'hero', 'elevated': activeSection !== 'hero' }, logoColorClass]") Chen Qiufan
 	.menu-wrapper.fixed.top-2.right-2(:class="{ 'blend-mode': activeSection === 'hero', 'elevated': activeSection !== 'hero' }")
 		Menu.text-sm(@update:activeSection="updateActiveSection")
 
-	.locale-select.p-2.fixed.bottom-2.blend-mode
+	.locale-select.fixed.left-2.bottom-2.blend-mode
 		select(v-model="currentLocale" @change="switchLocale")
 			option(value="en") EN
 			option(value="cn") CN
@@ -24,6 +24,23 @@ const updateActiveSection = (section) => {
   activeSection.value = section
 }
 
+const logoColorClass = computed(() => {
+  switch (activeSection.value) {
+    case 'hero':
+      return 'text-white'
+    case 'news':
+      return 'text-purple'
+    case 'publications':
+      return 'text-green'
+    case 'books':
+      return 'text-brown'
+    case 'About':
+      return 'text-purple'
+    default:
+      return 'text-white'
+  }
+})
+
 // Watch for external locale changes
 watch(locale, (newLocale) => {
   currentLocale.value = newLocale
@@ -37,6 +54,13 @@ watch(locale, (newLocale) => {
 .blend-mode
   mix-blend-mode: difference
 
+.logo
+  opacity: 0
+  transition: opacity 0.3s ease, mix-blend-mode 0.3s ease, color 0.3s ease
+
+  &.elevated
+    opacity: 1
+
 .menu-wrapper
   transition: mix-blend-mode 0.3s ease
 
@@ -48,7 +72,6 @@ watch(locale, (newLocale) => {
     background: none
     color: white
     border: none
-    padding: 0.25rem 0.5rem
     cursor: pointer
 
     &:focus
