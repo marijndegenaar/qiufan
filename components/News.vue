@@ -17,7 +17,7 @@
             :key="cat.value"
             :class="{ 'bg-purple text-lilac': activeCategory === cat.value, 'bg-lightpurple': activeCategory !== cat.value }"
             @click="setCategory(cat.value)"
-            class="hover_bg-lightpurple hover_text-purple"
+            class="md_hover_bg-lightpurple md_hover_text-purple"
           ) {{ cat.label }}
 
         template(v-if="filteredNews && filteredNews.length")
