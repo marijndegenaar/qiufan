@@ -54,8 +54,9 @@ const publication = computed(() => data.value || null);
       a
         font-size: 1.5rem
         text-decoration: none
-        margin-bottom: .5rem
+        margin-bottom: .5em
         text-shadow: #F0FBE1 0 0 10px
+        display: inline-block
         &:hover
           text-decoration: underline
           text-underline-offset: .15em

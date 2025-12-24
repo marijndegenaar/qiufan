@@ -5,22 +5,31 @@
     shape="circle"
     :pixel-size="2"
   )
-    .flex.flex-col.md_flex-row.gap-8.max-w-7xl.mx-auto.py-24.px-4
+    .flex.flex-col.md_flex-row.gap-8.max-w-7xl.mx-auto.py-24.px-2.md_px-4
       .news-menu.w-full.md_w-1x3
         //- h1.text-xl.font-bold.mb-4 {{ locale === 'cn' ? '新闻' : 'News' }}
 
-        //- Category tabs
-        .category-tabs.flex.gap-2.mb-4.flex-wrap
-          button.px-2.py-1.rounded-lg.text-sm.transition-colors.leading-none.uppercase(
-            v-for="cat in categories"
-            :key="cat.value"
-            :class="{ 'bg-purple text-lilac': activeCategory === cat.value, 'bg-lightpurple': activeCategory !== cat.value }"
-            @click="setCategory(cat.value)"
-            class="hover_bg-lightpurple hover_text-purple"
-          ) {{ cat.label }}
+        //- Category tabs and toggle button
+        .flex.items-center.justify-between.mb-4.gap-2
+          .category-tabs.flex.gap-2.flex-wrap.flex-1
+            button.px-2.py-1.rounded-lg.text-sm.transition-colors.leading-none.uppercase(
+              v-for="cat in categories"
+              :key="cat.value"
+              :class="{ 'bg-purple text-lilac': activeCategory === cat.value, 'bg-lightpurple': activeCategory !== cat.value }"
+              @click="setCategory(cat.value)"
+              class="hover_bg-lightpurple hover_text-purple"
+            ) {{ cat.label }}
+
+          //- Mobile toggle button
+          button.md_hidden.px-2.py-1.rounded-lg.bg-lightpurple.text-sm.transition-colors.shrink-0(
+            @click="toggleNewsMenu"
+            class="hover_bg-purple hover_text-lilac"
+          ) {{ isNewsMenuOpen ? '▲' : '▼' }}
 
         template(v-if="filteredNews && filteredNews.length")
-          .space-y-2
+          .news-list.space-y-2(
+            :class="{ 'hidden md_block': !isNewsMenuOpen }"
+          )
             .news-item.cursor-pointer.rounded.transition-colors.p-1(
               v-for="item in filteredNews"
               :key="item.id"
@@ -28,7 +37,7 @@
               @click="selectNews(item)"
               class="hover_shadow-xl hover_shadow-lightpurple hover_text-shadow-lg"
             )
-              .meta.text-sm 
+              .meta.text-sm
                 | {{ formatDate(item.first_publication_date) }} — {{ item.data.subtitle }}
                 span.category.text-xs.ml-2.px-1.bg-lilac.rounded.uppercase {{ item.data.category }}
               .title.text-md {{ item.data.title }}
@@ -125,6 +134,9 @@ const filteredNews = computed(() => {
 const selectedNews = ref(null);
 const isMounted = ref(false);
 
+// Mobile menu toggle state
+const isNewsMenuOpen = ref(false);
+
 // Function to set active category
 const setCategory = (category) => {
   activeCategory.value = category;
@@ -134,6 +146,15 @@ const setCategory = (category) => {
 // Function to select a news item
 const selectNews = (item) => {
   selectedNews.value = item;
+  // On mobile, close the menu after selecting an item
+  if (typeof window !== 'undefined' && window.innerWidth < 768) {
+    isNewsMenuOpen.value = false;
+  }
+};
+
+// Function to toggle news menu on mobile
+const toggleNewsMenu = () => {
+  isNewsMenuOpen.value = !isNewsMenuOpen.value;
 };
 
 // Auto-select the latest news item after component is mounted (client-side only)

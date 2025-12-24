@@ -5,7 +5,7 @@
     shape="circle"
     :pixel-size="3"
   )
-    .py-24.px-4
+    .py-24.px-2.md_px-4
       .flex.flex-col.md_flex-row.gap-8.max-w-7xl.mx-auto
         .books-menu.w-full.md_w-1x3
           //- h1.text-xl.font-bold.mb-4 {{ locale === 'cn' ? '书籍' : 'Books' }}

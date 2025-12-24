@@ -17,6 +17,14 @@ export class ReactionDiffusionCompute {
         followerVelocity: [0, 0]
     };
 
+    // gyroscope data for mobile
+    gyro = {
+        enabled: false,
+        alpha: 0,
+        beta: 0,
+        gamma: 0
+    };
+
     constructor(device, viewportSize) {
         this.device = device;
 
@@ -74,6 +82,55 @@ export class ReactionDiffusionCompute {
             this.pointer.position = this.getNormalizedPointerCoords(e.clientX, e.clientY);
             if (!this.pointer.followerPosition) this.pointer.followerPosition = [...this.pointer.position];
         });
+
+        // Initialize gyroscope for mobile
+        this.initGyroscope();
+    }
+
+    initGyroscope() {
+        // Check if DeviceOrientationEvent is supported
+        if (typeof DeviceOrientationEvent === 'undefined') return;
+
+        // iOS 13+ requires permission
+        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+            document.body.addEventListener('click', async () => {
+                if (!this.gyro.enabled) {
+                    try {
+                        const permission = await DeviceOrientationEvent.requestPermission();
+                        if (permission === 'granted') {
+                            this.enableGyroscope();
+                        }
+                    } catch (error) {
+                        console.log('Gyroscope permission denied:', error);
+                    }
+                }
+            }, { once: true });
+        } else {
+            // Android and older iOS - no permission needed
+            this.enableGyroscope();
+        }
+    }
+
+    enableGyroscope() {
+        window.addEventListener('deviceorientation', (event) => {
+            if (event.gamma === null || event.beta === null) return;
+
+            this.gyro.enabled = true;
+            this.gyro.alpha = event.alpha || 0;
+            this.gyro.beta = event.beta || 0;
+            this.gyro.gamma = event.gamma || 0;
+
+            // Convert gyroscope to normalized coords (-1 to 1)
+            // gamma: left-right tilt (-90 to 90)
+            // beta: front-back tilt (-180 to 180)
+            const x = Math.max(-1, Math.min(1, this.gyro.gamma / 45));
+            const y = Math.max(-1, Math.min(1, (this.gyro.beta - 90) / 45));
+
+            this.pointer.position = [x, y];
+            if (!this.pointer.followerPosition) {
+                this.pointer.followerPosition = [...this.pointer.position];
+            }
+        });
     }
 
     resize(width, height) {
@@ -84,7 +141,9 @@ export class ReactionDiffusionCompute {
         this.inputCanvas = document.createElement('canvas');
         this.inputCanvas.width = this.width;
         this.inputCanvas.height = this.height;
-        this.fontSize = Math.max(this.aspect > 1 ? 70 : 80, Math.min(this.inputCanvas.width, this.inputCanvas.height) / 3.75);
+        // Use smaller minimum font size on mobile (aspect <= 1)
+        const minFontSize = this.aspect > 1 ? 70 : 55;
+        this.fontSize = Math.max(minFontSize, Math.min(this.inputCanvas.width, this.inputCanvas.height) / 3.75);
         this.inputContext = this.inputCanvas.getContext("2d", { willReadFrequently: true });
         this.inputContext.font = `${this.fontSize}px "BugrinoTrials-Light"`;
         this.letterWidth = this.inputContext.measureText('0').width;
