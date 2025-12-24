@@ -135,7 +135,8 @@ a.active span
   transition: color 0.3s ease
 
 @media (max-width: 767px)
-  #font-size: 1.5rem
+  #menu
+    font-size: 1.5rem
   .menu-items
     a
       span
