@@ -3,7 +3,7 @@
   #mobile_menu.right-1.fixed(v-if="isMobileMenuVisible" @click="toggleMenu" :class="menuColorClass") MENU
   #menu(v-if="!isMobileMenuVisible" :class="menuColorClass")
     .menu-items.flex-col.flex.md_block.text-right
-      a.cursor-pointer(
+      a.cursor-pointer.inline-block(
         v-for="item in menuItems"
         :key="item.section"
         :class="{ 'active': activeSection === item.section }"
@@ -11,7 +11,7 @@
         @mouseenter="$emit('menuHover', item.section)"
         @mouseleave="$emit('menuHover', '')"
       )
-        span.link.ml-8 {{ item.name }}
+        span.link.px-3.py-0.rounded-xl.inline-block(:class="menuBackgroundClass") {{ item.name }}
 
 </template>
 <script setup>
@@ -61,6 +61,21 @@ const menuColorClass = computed(() => {
       return 'text-purple';
     default:
       return 'text-white';
+  }
+});
+
+const menuBackgroundClass = computed(() => {
+  switch (activeSection.value) {
+    case 'news':
+      return 'bg-lightpurple md_bg-transparent';
+    case 'publications':
+      return 'bg-avocado md_bg-transparent';
+    case 'books':
+      return 'bg-sand md_bg-transparent';
+    case 'About':
+      return 'bg-grey md_bg-transparent';
+    default:
+      return '';
   }
 });
 
@@ -133,7 +148,9 @@ a span:hover, #mobile_menu
   border-bottom-color: currentColor
 
 a.active span
-  border-bottom: 2px solid currentColor
+  text-decoration: underline
+  text-decoration-thickness: 2px
+  text-underline-offset: .4rem
 
 #menu
   font-size: 1.5rem

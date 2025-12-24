@@ -48,7 +48,7 @@
               @touchend="handleTouchEnd"
             )
               //- Back button for mobile
-              button.mb-4.px-2.py-1.rounded-lg.bg-lightpurple.text-purple.text-sm.transition-colors.mobile-back-button(
+              button.mb-4.px-2.py-1.rounded-lg.bg-lilac.text-purple.text-sm.transition-colors.mobile-back-button(
                 @click="closeMobileDetail"
                 class="md_hover_bg-purple md_hover_text-lilac"
               ) ← {{ locale === 'cn' ? '返回列表' : 'BACK TO LIST' }}
