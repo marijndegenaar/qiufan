@@ -1,21 +1,13 @@
-
-@font-face {
-    font-family: 'A';
-    src: url('a-reg.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'G';
-    src: url('g-reg.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-}
-
 @font-face {
     font-family: 'B';
     src: url('BugrinoTrials-Light.otf') format('opentype');
     font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'B';
+    src: url('BugrinoTrials-thin.otf') format('opentype');
+    font-weight: bold;
     font-style: normal;
 }
 
