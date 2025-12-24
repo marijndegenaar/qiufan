@@ -4,12 +4,12 @@
     font-weight: normal;
     font-style: normal;
 }
-@font-face {
+/* @font-face {
     font-family: 'B';
-    src: url('BugrinoTrials-thin.otf') format('opentype');
+    src: url('BugrinoTrials-Light.otf') format('opentype');
     font-weight: bold;
     font-style: normal;
-}
+} */
 
 html, body{
     font-family: 'B', sans-serif;

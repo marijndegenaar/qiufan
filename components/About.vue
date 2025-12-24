@@ -1,11 +1,12 @@
 <template lang="pug">
-  ShaderBackground#About.text-purple.px-2.py-16(
+  ShaderBackground#About.text-purple.px-2.py-8.md_py-24(
     bg="grey"
     ink="purple"
     shape="circle"
     :pixel-size="3"
   )
     .w-full.flex.flex-wrap(v-if="about")
+      .h1.text-base.font-bold.mb-8.uppercase.md_hidden About
       .feature-image.w-full.md_w-1x3.md_mr-8.mb-8
         PrismicImage.shadow-lightpurple.shadow-xl(
           v-if="about.data.featured_image?.url"

@@ -5,9 +5,9 @@
     shape="circle"
     :pixel-size="3"
   )
-    .py-24
+    .py-8.md_py-24
       template(v-if="publication")
-        //- h1.text-xl.font-bold.mb-4 {{ publication.data.title || (locale === 'cn' ? '出版物' : 'Publications') }}
+        h1.text-base.font-bold.mb-8.uppercase.md_hidden {{ publication.data.title || (locale === 'cn' ? '出版物' : 'Publications') }}
         template(v-if="publication.data.links")
           PrismicRichText(:field="publication.data.links")
         //- pre {{ publication.data.links }}
