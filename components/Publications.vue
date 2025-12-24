@@ -56,10 +56,18 @@ const publication = computed(() => data.value || null);
         @media (max-width: 768px)
           font-size: 2rem
           line-height: 1.2
+          &::after
+              content: "↗︎"
+              font-size: 0.4em
+              margin-left: .5em
+              text-decoration: none
+              display: inline-block
+              position: absolute
+              margin-top: 0.5rem
         text-decoration: none
         margin-bottom: .5em
         text-shadow: #F0FBE1 0 0 10px
-        display: inline-block
+        display: inline-block              
         @media (min-width: 769px)
           &:hover
             text-decoration: underline

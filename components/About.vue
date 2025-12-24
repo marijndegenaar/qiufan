@@ -3,7 +3,7 @@
     bg="grey"
     ink="purple"
     shape="circle"
-    :pixel-size="2"
+    :pixel-size="3"
   )
     .w-full.flex.flex-wrap(v-if="about")
       .feature-image.w-full.md_w-1x3.md_mr-8.mb-8

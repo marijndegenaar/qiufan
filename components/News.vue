@@ -3,7 +3,7 @@
     bg="lilac"
     ink="purple"
     shape="circle"
-    :pixel-size="2"
+    :pixel-size="3"
   )
     .flex.flex-col.md_flex-row.gap-8.max-w-7xl.mx-auto.py-24.px-2.md_px-4
       .news-menu.w-full.md_w-1x3(

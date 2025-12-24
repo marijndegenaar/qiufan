@@ -1,6 +1,6 @@
 <template lang="pug">
 #menu-wrap
-  #mobile_menu.right-1.fixed(v-if="isMobileMenuVisible" @click="toggleMenu") MENU
+  #mobile_menu.right-1.fixed(v-if="isMobileMenuVisible" @click="toggleMenu" :class="menuColorClass") MENU
   #menu(v-if="!isMobileMenuVisible" :class="menuColorClass")
     .menu-items.flex-col.flex.md_block.text-right
       a.cursor-pointer(
@@ -109,7 +109,12 @@ const toggleMenu = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
-  updateActiveSection();
+  // Use nextTick and setTimeout to ensure DOM is fully rendered
+  nextTick(() => {
+    setTimeout(() => {
+      updateActiveSection();
+    }, 100);
+  });
 });
 
 onBeforeUnmount(() => {
@@ -131,12 +136,12 @@ a.active span
   border-bottom: 2px solid currentColor
 
 #menu
-  font-size: 2rem
+  font-size: 1.5rem
   transition: color 0.3s ease
 
 @media (max-width: 767px)
   #menu
-    font-size: 1.5rem
+    font-size: 2rem
   .menu-items
     a
       span

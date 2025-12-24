@@ -318,6 +318,9 @@ const initThreeScene = () => {
   let clickIx = 0;
   const handlePointerDown = (e: PointerEvent) => {
     if (!canvas) return;
+    // Disable click effect on mobile/touch devices
+    if (window.innerWidth < 768 || e.pointerType === 'touch') return;
+
     const rect = canvas.getBoundingClientRect();
     const fx = (e.clientX - rect.left) * (canvas.width / rect.width);
     const fy = (rect.height - (e.clientY - rect.top)) * (canvas.height / rect.height);

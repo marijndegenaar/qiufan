@@ -51,7 +51,7 @@
                 .overflow-hidden
                   .content.text-brown
                     h2.text-xl.md_text-lg.mb-1.py-2.leading-none {{ selectedBook.data.title }}
-                    .book-content.mb-8.text-lg.md_text-base(v-if="selectedBook.data.description")
+                    .book-content.mb-8(v-if="selectedBook.data.description")
                       PrismicRichText(:field="selectedBook.data.description")
                   PrismicImage.w-full.md_w-1x4(
                     v-if="selectedBook.data.featured_image?.url"
