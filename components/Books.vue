@@ -21,12 +21,12 @@
               template(v-if="booksByCategory[category] && booksByCategory[category].length")
                 .text-xs.mb-1.uppercase {{ getCategoryLabel(category) }}
                 .space-y-2.mb-8
-                  .book-item.cursor-pointer.rounded.transition-colors.text-lg.mb-8(
+                  .book-item.cursor-pointer.rounded.transition-colors.text-lg.mb-8.p-1(
                     v-for="book in booksByCategory[category]"
                     :key="book.id"
-                    :class="{ 'md_bg-lightsand md_text-brown': selectedBook?.id === book.id }"
+                    :class="{ 'md_bg-lightsand md_shadow-lightsand md_shadow-lg md_text-brown': selectedBook?.id === book.id }"
                     @click="selectBook(book)"
-                    class="md_hover_bg-lightsand md_hover_text-brown"
+                    class="md_hover_shadow-xl md_hover_shadow-lightsand md_hover_text-shadow-lg"
                   )
                     .title.text-xl.md_text-md.leading-none {{ book.data.title }}
           template(v-else)
@@ -75,6 +75,7 @@
 <script setup>
 const { locale } = useI18n()
 const prismic = usePrismic()
+const { setOverlay } = useOverlay()
 
 // Map locale to Prismic language code
 const getPrismicLang = (loc) => {
@@ -147,6 +148,8 @@ const selectBook = (book) => {
     showMobileDetail.value = true;
     // Disable body scroll when overlay is open
     document.body.style.overflow = 'hidden';
+    // Set overlay section for menu color
+    setOverlay('books');
   }
 };
 
@@ -157,6 +160,8 @@ const closeMobileDetail = () => {
   if (typeof window !== 'undefined') {
     document.body.style.overflow = '';
   }
+  // Clear overlay section
+  setOverlay(null);
 };
 
 // Touch gesture handling for swipe to close
@@ -197,6 +202,7 @@ watch(locale, () => {
   console.log('[Books.vue] Locale changed, clearing selection...')
   selectedBook.value = null
   showMobileDetail.value = false
+  setOverlay(null)
   if (typeof window !== 'undefined') {
     document.body.style.overflow = ''
   }
@@ -204,6 +210,7 @@ watch(locale, () => {
 
 // Cleanup on unmount
 onUnmounted(() => {
+  setOverlay(null)
   if (typeof window !== 'undefined') {
     document.body.style.overflow = ''
   }

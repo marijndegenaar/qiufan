@@ -88,6 +88,7 @@
 <script setup>
 const { locale } = useI18n()
 const prismic = usePrismic()
+const { setOverlay } = useOverlay()
 
 // Map locale to Prismic language code
 const getPrismicLang = (loc) => {
@@ -177,6 +178,8 @@ const selectNews = (item) => {
     showMobileDetail.value = true;
     // Disable body scroll when overlay is open
     document.body.style.overflow = 'hidden';
+    // Set overlay section for menu color
+    setOverlay('news');
   }
 };
 
@@ -187,6 +190,8 @@ const closeMobileDetail = () => {
   if (typeof window !== 'undefined') {
     document.body.style.overflow = '';
   }
+  // Clear overlay section
+  setOverlay(null);
 };
 
 // Touch gesture handling for swipe to close
@@ -276,6 +281,7 @@ watch(locale, () => {
   activeCategory.value = 'all'
   selectedNews.value = null
   showMobileDetail.value = false
+  setOverlay(null)
   if (typeof window !== 'undefined') {
     document.body.style.overflow = ''
   }
@@ -283,6 +289,7 @@ watch(locale, () => {
 
 // Cleanup on unmount
 onUnmounted(() => {
+  setOverlay(null)
   if (typeof window !== 'undefined') {
     document.body.style.overflow = ''
   }

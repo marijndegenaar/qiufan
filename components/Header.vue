@@ -12,6 +12,7 @@
 
 <script setup>
 const { locale, setLocale } = useI18n()
+const { overlaySection } = useOverlay()
 
 const currentLocale = ref(locale.value)
 const activeSection = ref('hero')
@@ -25,7 +26,10 @@ const updateActiveSection = (section) => {
 }
 
 const logoColorClass = computed(() => {
-  switch (activeSection.value) {
+  // If overlay is open, use overlay's color scheme
+  const section = overlaySection.value || activeSection.value
+
+  switch (section) {
     case 'hero':
       return 'text-white'
     case 'news':

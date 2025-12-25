@@ -16,6 +16,7 @@
 </template>
 <script setup>
 const { locale } = useI18n()
+const { overlaySection } = useOverlay()
 
 const menuLabels = {
   en: {
@@ -48,7 +49,10 @@ const isMobileMenuVisible = ref(false);
 const activeSection = ref('hero');
 
 const menuColorClass = computed(() => {
-  switch (activeSection.value) {
+  // If overlay is open, use overlay's color scheme
+  const section = overlaySection.value || activeSection.value
+
+  switch (section) {
     case 'hero':
       return 'text-white';
     case 'news':
@@ -65,7 +69,10 @@ const menuColorClass = computed(() => {
 });
 
 const menuBackgroundClass = computed(() => {
-  switch (activeSection.value) {
+  // If overlay is open, use overlay's color scheme
+  const section = overlaySection.value || activeSection.value
+
+  switch (section) {
     case 'news':
       return 'bg-lightpurple md_bg-transparent';
     case 'publications':
