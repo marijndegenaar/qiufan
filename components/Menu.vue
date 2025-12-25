@@ -111,7 +111,7 @@ const updateActiveSection = () => {
 
 const handleScroll = () => {
   if (process.client && window.innerWidth <= 767) {
-    isMobileMenuVisible.value = window.scrollY > 50;
+    isMobileMenuVisible.value = true;
   }
   updateActiveSection();
 };
@@ -123,6 +123,11 @@ const toggleMenu = () => {
 };
 
 onMounted(() => {
+  // Initialize mobile menu state
+  if (process.client && window.innerWidth <= 767) {
+    isMobileMenuVisible.value = true;
+  }
+
   window.addEventListener('scroll', handleScroll);
   // Use nextTick and setTimeout to ensure DOM is fully rendered
   nextTick(() => {

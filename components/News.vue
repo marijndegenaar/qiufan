@@ -6,7 +6,7 @@
     :pixel-size="3"
   )
     .flex.flex-col.md_flex-row.gap-8.max-w-7xl.mx-auto.py-8.md_py-24.px-2.md_px-4
-      .h1.text-base.font-bold.mb-8.uppercase.md_hidden News
+      .h1.text-base.font-bold.mb-8.uppercase.md_hidden.text-center News
       .news-menu.w-full.md_w-1x3(
         :class="{ 'hidden': selectedNews && showMobileDetail }"
         class="md_block"
@@ -49,7 +49,7 @@
               @touchend="handleTouchEnd"
             )
               //- Back button for mobile
-              button.mb-4.px-2.py-1.rounded-lg.bg-lilac.text-purple.text-sm.transition-colors.mobile-back-button(
+              button.mb-4.rounded-lg.bg-lilac.text-purple.transition-colors.mobile-back-button(
                 @click="closeMobileDetail"
                 class="md_hover_bg-purple md_hover_text-lilac"
               ) ← {{ locale === 'cn' ? '返回列表' : 'BACK TO LIST' }}

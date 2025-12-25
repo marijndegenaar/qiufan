@@ -6,7 +6,7 @@
     :pixel-size="3"
   )
     .py-8.md_py-24.px-2.md_px-4
-      .h1.text-base.font-bold.mb-8.uppercase.md_hidden Books
+      .h1.text-base.font-bold.mb-8.uppercase.md_hidden.text-center Books
       .flex.flex-col.md_flex-row.gap-8.max-w-7xl.mx-auto
         .books-menu.w-full.md_w-1x3(
           :class="{ 'hidden': selectedBook && showMobileDetail }"
@@ -44,7 +44,7 @@
                 @touchend="handleTouchEnd"
               )
                 //- Back button for mobile
-                button.mb-4.px-2.py-1.rounded-lg.bg-lightsand.text-brown.text-sm.transition-colors.mobile-back-button(
+                button.mb-4.text-brown.transition-colors.mobile-back-button(
                   @click="closeMobileDetail"
                   class="md_hover_bg-brown md_hover_text-sand"
                 ) ← {{ locale === 'cn' ? '返回列表' : 'BACK TO LIST' }}
