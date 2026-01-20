@@ -1,6 +1,6 @@
 <template lang="pug">
 #header
-	h1.logo.fixed.top-2.left-2.uppercase.font-semibold(:class="[{ 'blend-mode': activeSection === 'hero', 'elevated': activeSection !== 'hero' }, logoColorClass]") Chen Qiufan
+	h1.logo.fixed.top-2.left-3.uppercase(:class="[{ 'blend-mode': activeSection === 'hero', 'elevated': activeSection !== 'hero' }, logoColorClass]") {{ locale === 'cn' ? '陈楸帆' : 'Chen Qiufan' }}
 	.menu-wrapper.fixed.top-2.right-2(:class="{ 'blend-mode': activeSection === 'hero', 'elevated': activeSection !== 'hero' }")
 		Menu(@update:activeSection="updateActiveSection")
 
