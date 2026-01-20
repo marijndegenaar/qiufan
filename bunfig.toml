@@ -1,5 +1,6 @@
 [install]
-# Force estree-walker to version 3.0.3
-[install.override]
-"estree-walker" = "3.0.3"
+# Pin estree-walker to a CJS-compatible version.
+# Vue compiler CJS bundles can `require()` estree-walker, which breaks on estree-walker v3 (ESM-only).
+[install.overrides]
+"estree-walker" = "2.0.2"
 
