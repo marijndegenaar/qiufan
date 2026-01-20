@@ -116,6 +116,16 @@ const news = computed(() => {
   return data.value || []
 });
 
+// Sort news by publication date (newest first) for consistent ordering
+const sortedNews = computed(() => {
+  const items = news.value || [];
+  return [...items].sort((a, b) => {
+    const aDate = new Date(a.first_publication_date).getTime();
+    const bDate = new Date(b.first_publication_date).getTime();
+    return bDate - aDate;
+  });
+});
+
 // Category definitions
 const categoryLabels = {
   en: {
@@ -148,7 +158,7 @@ const activeCategory = ref('all');
 // Filtered news based on active category
 const filteredNews = computed(() => {
   const isServer = typeof window === 'undefined';
-  const newsItems = news.value || [];
+  const newsItems = sortedNews.value || [];
   const filtered = activeCategory.value === 'all'
     ? newsItems
     : newsItems.filter(item => item.data.category === activeCategory.value);
