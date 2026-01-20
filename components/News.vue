@@ -22,13 +22,13 @@
           ) {{ cat.label }}
 
         template(v-if="filteredNews && filteredNews.length")
-          .news-list.space-y-2
-            .news-item.cursor-pointer.rounded.transition-colors.p-1.mb-8(
+          .news-list
+            .news-item.cursor-pointer.rounded.transition-colors.mb-8(
               v-for="item in filteredNews"
               :key="item.id"
-              :class="{ 'md_bg-lightpurple md_shadow-lightpurple md_shadow-lg md_text-purple': isMounted && selectedNews?.id === item.id }"
+              :class="{ 'active': isMounted && selectedNews?.id === item.id }"
               @click="selectNews(item)"
-              class="md_hover_shadow-xl md_hover_shadow-lightpurple md_hover_text-shadow-lg"
+              class=" md_hover_text-shadow-lg"
             )
               .meta.text-sm
                 | {{ formatDate(item.first_publication_date) }} — {{ item.data.subtitle }}
@@ -72,7 +72,7 @@
           v-if="selectedNews"
         )
           .overflow-hidden
-            PrismicImage.w-full.md_w-1x2.shadow-lightpurple.shadow-xl(
+            PrismicImage.w-full.md_w-1x2.shadow-lightpurple.shadow-xl.aspect-video.object-cover(
               v-if="selectedNews.data.featured_image?.url"
               :field="selectedNews.data.featured_image"
             )
@@ -307,7 +307,26 @@ onUnmounted(() => {
 </script>
 
 <style lang="sass" scoped>
-// Mobile detail overlay styles - only on mobile
+
+// .meta
+//   color: #a491bf
+
+.title
+  transition: all 0.2s ease
+
+.title:hover, .active .title
+  text-decoration: underline
+  text-underline-offset: .15em
+  text-decoration-thickness: 0.05em
+  // text-shadow: 0px 0px 10px #ba8dff
+
+// .active .title
+//   background: #dfcbff
+//   color: #EBDEFF
+//   display: inline-block
+//   padding: 0.35em
+
+  // Mobile detail overlay styles - only on mobile
 .mobile-detail-overlay
   position: fixed
   top: 0

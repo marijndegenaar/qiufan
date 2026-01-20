@@ -21,12 +21,12 @@
               template(v-if="booksByCategory[category] && booksByCategory[category].length")
                 .text-xs.mb-1.uppercase {{ getCategoryLabel(category) }}
                 .space-y-2.mb-8
-                  .book-item.cursor-pointer.rounded.transition-colors.text-lg.mb-8.p-1(
+                  .book-item.cursor-pointer.rounded.transition-colors.text-lg.mb-8(
                     v-for="book in booksByCategory[category]"
                     :key="book.id"
-                    :class="{ 'md_bg-lightsand md_shadow-lightsand md_shadow-lg md_text-brown': selectedBook?.id === book.id }"
+                    :class="{ 'active': selectedBook?.id === book.id }"
                     @click="selectBook(book)"
-                    class="md_hover_shadow-xl md_hover_shadow-lightsand md_hover_text-shadow-lg"
+                    class="d md_hover_text-shadow-lg"
                   )
                     .title.text-xl.md_text-md.leading-none {{ book.data.title }}
           template(v-else)
@@ -218,6 +218,13 @@ onUnmounted(() => {
 </script>
 
 <style lang="sass" scoped>
+
+
+.title:hover, .active .title
+  text-decoration: underline
+  text-underline-offset: .15em
+  text-decoration-thickness: 0.05em
+
 // Mobile detail overlay styles - only on mobile
 .mobile-detail-overlay
   position: fixed
