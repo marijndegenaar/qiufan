@@ -1,5 +1,15 @@
 <template>
-  <div class="reaction-diffusion-container" ref="containerRef" :style="{ height: fixedHeight }">
+  <div
+    class="reaction-diffusion-container"
+    ref="containerRef"
+    :style="{ height: fixedHeight }"
+    role="button"
+    tabindex="0"
+    aria-label="Toggle language"
+    @click="toggleLocale"
+    @keydown.enter.prevent="toggleLocale"
+    @keydown.space.prevent="toggleLocale"
+  >
     <div v-if="!hasWebGPU" class="no-webgpu">
       <p>
         You are using a browser that does not support WebGPU.
@@ -52,7 +62,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+
+const { locale, setLocale } = useI18n()
 
 const canvasRef = ref(null)
 const hasWebGPU = ref(true)
@@ -78,6 +90,34 @@ let reactionDiffusion = null
 let composite = null
 let animationId = null
 let resizeObserver = null
+
+const syncSeedTextToLocale = () => {
+  if (!reactionDiffusion?.setSeedText) return
+
+  if (locale.value === 'cn') {
+    reactionDiffusion.setSeedText({
+      wide: '陈秋帆',
+      line1: '陈',
+      line2: '秋帆',
+    })
+  } else {
+    reactionDiffusion.setSeedText({
+      wide: 'Chen Qiufan',
+      line1: 'Chen',
+      line2: 'Qiufan',
+    })
+  }
+}
+
+const toggleLocale = async (e) => {
+  // Avoid toggling when interacting with the (debug) controls UI
+  const target = e?.target
+  if (target?.closest?.('.controls')) return
+  if (target?.closest?.('a, button, input, select, textarea')) return
+
+  const next = locale.value === 'cn' ? 'en' : 'cn'
+  await setLocale(next)
+}
 
 // Helper to convert hex to normalized RGB
 const hexToRgb = (hex) => {
@@ -215,6 +255,7 @@ const init = async () => {
 
     reactionDiffusion = new ReactionDiffusionCompute(device, viewportSize)
     composite = new Composite(device, reactionDiffusion)
+    syncSeedTextToLocale()
 
     // Setup resize observer
     resizeObserver = new ResizeObserver(() => resize())
@@ -244,6 +285,10 @@ onMounted(async () => {
   await init()
 })
 
+watch(locale, () => {
+  syncSeedTextToLocale()
+})
+
 onBeforeUnmount(() => {
   if (animationId) {
     cancelAnimationFrame(animationId)
@@ -258,6 +303,7 @@ onBeforeUnmount(() => {
 .reaction-diffusion-container {
   width: 100vw;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .viewport {

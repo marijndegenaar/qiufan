@@ -6,7 +6,7 @@
     :pixel-size="3"
   )
     .flex.flex-col.md_flex-row.gap-8.max-w-7xl.mx-auto.py-8.md_py-24.px-2.md_px-4
-      .h1.text-base.font-bold.mb-8.uppercase.md_hidden.text-center News
+      .h1.text-base.font-bold.mb-8.uppercase.md_hidden.text-center {{ locale === 'cn' ? '新闻' : 'News' }}
       .news-menu.w-full.md_w-1x3(
         :class="{ 'hidden': selectedNews && showMobileDetail }"
         class="md_block"

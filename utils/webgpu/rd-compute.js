@@ -19,6 +19,11 @@ export class ReactionDiffusionCompute {
 
     constructor(device, viewportSize) {
         this.device = device;
+        // Seed text (used to generate the "hero title" in the seed texture)
+        this.seedTextWide = 'Chen Qiufan';
+        this.seedTextLine1 = 'Chen';
+        this.seedTextLine2 = 'Qiufan';
+        this.needsSeedRedraw = true;
 
         // create pipeline and bind group layouts
         const module = this.device.createShaderModule({ code: ReactionDiffusionComputeShader });
@@ -62,6 +67,14 @@ export class ReactionDiffusionCompute {
 
         // initial resize (this also creates the textures and bind groups)
         this.resize(viewportSize[0], viewportSize[1]);
+    }
+
+    setSeedText({ wide, line1, line2 } = {}) {
+        if (typeof wide === 'string') this.seedTextWide = wide;
+        if (typeof line1 === 'string') this.seedTextLine1 = line1;
+        if (typeof line2 === 'string') this.seedTextLine2 = line2;
+        this.needsSeedRedraw = true;
+        this.lastTime = undefined;
     }
 
     initEvents() {
@@ -164,15 +177,15 @@ export class ReactionDiffusionCompute {
         const now = new Date();
 
         if (this.aspect > 1.4) {
-            const text = 'Chen Qiufan';
+            const text = this.seedTextWide;
             const textWidth = ctx.measureText(text).width;
             ctx.fillText(text,
                 - textWidth / 2,
                 + this.letterHeight * .5);
         } else {
             const lineHeight = 1.25;
-            const text1 = 'Chen';
-            const text2 = 'Qiufan';
+            const text1 = this.seedTextLine1;
+            const text2 = this.seedTextLine2;
             const textWidth1 = ctx.measureText(text1).width;
             const textWidth2 = ctx.measureText(text2).width;
             const y = - this.letterHeight * .5 + (this.letterHeight * (1 - lineHeight));
@@ -223,11 +236,12 @@ export class ReactionDiffusionCompute {
 
         computePassEncoder.setPipeline(this.pipeline);
 
-        // redraw the clock only if needed
-        if (!this.lastTime || this.lastTime.getSeconds() !== new Date().getSeconds()) {
+        // redraw the seed text if needed
+        if (this.needsSeedRedraw || !this.lastTime || this.lastTime.getSeconds() !== new Date().getSeconds()) {
             const imgData = this.drawTime();
             const seedData = new Uint8Array(Array.from(imgData.data));
             this.device.queue.writeTexture({ texture: this.seedTexture }, seedData.buffer, { bytesPerRow: this.width * 4 }, { width: this.width, height: this.height });
+            this.needsSeedRedraw = false;
         }
 
         // reaction diffusion ping-pong loop ;)
