@@ -96,9 +96,9 @@ const syncSeedTextToLocale = () => {
 
   if (locale.value === 'cn') {
     reactionDiffusion.setSeedText({
-      wide: '陈秋帆',
+      wide: '陈楸帆',
       line1: '陈',
-      line2: '秋帆',
+      line2: '楸帆',
     })
   } else {
     reactionDiffusion.setSeedText({

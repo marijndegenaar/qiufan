@@ -16,7 +16,7 @@
           template(v-if="books && books.length")
             //- Group books by category
 
-            div(v-for="category in ['Novels', 'Short-fiction collections']" :key="category")
+            div(v-for="category in ['Novels', 'Collections', 'Graphics']" :key="category")
               template(v-if="booksByCategory[category] && booksByCategory[category].length")
                 .text-xs.mb-1.uppercase {{ getCategoryLabel(category) }}
                 .space-y-2.mb-8
@@ -102,11 +102,13 @@ const books = computed(() => data.value || []);
 const categoryLabels = {
   en: {
     'Novels': 'Novels',
-    'Short-fiction collections': 'Short Fiction Collections'
+    'Collections': 'Collections',
+    'Graphics': 'Graphics'
   },
   cn: {
     'Novels': '小说',
-    'Short-fiction collections': '短篇小说集'
+    'Collections': '选集',
+    'Graphics': '绘本'
   }
 }
 
@@ -120,7 +122,8 @@ const getCategoryLabel = (category) => {
 const booksByCategory = computed(() => {
   const grouped = {
     'Novels': [],
-    'Short-fiction collections': []
+    'Collections': [],
+    'Graphics': []
   }
 
   books.value.forEach(book => {

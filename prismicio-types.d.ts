@@ -189,7 +189,7 @@ interface BooksDocumentData {
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/fields/select
    */
-  category: prismic.SelectField<"Novels" | "Short-fiction collections">;
+  category: prismic.SelectField<"Novels" | "Collections" | "Graphics">;
 
   /**
    * Featured image field in *Books*

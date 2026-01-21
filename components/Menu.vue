@@ -27,7 +27,7 @@ const menuLabels = {
   },
   cn: {
     news: "新闻",
-    publications: "出版物",
+    publications: "发表",
     books: "书籍",
     info: "信息"
   }

@@ -33,7 +33,7 @@
         "config": {
           "label": "Category",
           "placeholder": "",
-          "options": ["Novels", "Short-fiction collections"]
+          "options": ["Novels", "Collections", "Graphics"]
         }
       },
       "featured_image": {
