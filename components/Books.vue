@@ -19,7 +19,7 @@
             div(v-for="category in ['Novels', 'Collections', 'Graphics']" :key="category")
               template(v-if="booksByCategory[category] && booksByCategory[category].length")
                 .text-xs.mb-1.uppercase {{ getCategoryLabel(category) }}
-                .space-y-2.mb-8
+                .space-y-2.mb-4
                   .book-item.cursor-pointer.rounded.transition-colors.text-lg.mb-8(
                     v-for="book in booksByCategory[category]"
                     :key="book.id"
