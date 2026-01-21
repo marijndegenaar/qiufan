@@ -6,7 +6,7 @@
     :pixel-size="3"
   )
     .py-8.md_py-24.px-2.md_px-4
-      .h1.text-base.font-bold.mb-4.uppercase.md_hidden.text-center {{ locale === 'cn' ? '书籍' : 'Books' }}
+      .h1.text-base.font-bold.mb-8.uppercase.md_hidden.text-center {{ locale === 'cn' ? '书籍' : 'Books' }}
       .flex.flex-col.md_flex-row.gap-8.mx-auto
         .books-menu.w-full.md_w-1x3(
           :class="{ 'hidden': selectedBook && showMobileDetail }"
@@ -20,7 +20,7 @@
               template(v-if="booksByCategory[category] && booksByCategory[category].length")
                 .text-xs.mb-1.uppercase {{ getCategoryLabel(category) }}
                 .space-y-2.mb-8
-                  .book-item.cursor-pointer.rounded.transition-colors.text-lg.mb-8(
+                  .book-item.cursor-pointer.rounded.transition-colors.text-lg.mb-4(
                     v-for="book in booksByCategory[category]"
                     :key="book.id"
                     :class="{ 'active': selectedBook?.id === book.id }"
