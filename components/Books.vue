@@ -106,7 +106,7 @@ const categoryLabels = {
     'Graphics': 'Graphics'
   },
   cn: {
-    'Novels': '小说',
+    'Novels': '长篇小说',
     'Collections': '选集',
     'Graphics': '绘本'
   }
